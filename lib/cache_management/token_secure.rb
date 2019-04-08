@@ -11,7 +11,7 @@ module CacheManagement
         lc_to_decrypt = LocalCipher.new(GlobalConstant::Base.local_cipher_key)
         lc_to_decrypt_res = lc_to_decrypt.decrypt(token_data[:api_secret])
         if lc_to_decrypt_res[:success]
-          token_data[:api_secret] = lc_to_decrypt_res.data[:plaintext]
+          token_data[:api_secret] = lc_to_decrypt_res[:data][:plaintext]
         else
           data_cache[token_id] = {}
         end
@@ -25,7 +25,7 @@ module CacheManagement
     #
     def fetch_from_db(cache_miss_ids)
       data_to_cache = ::Token.where(token_id: cache_miss_ids).inject({}) do |data, obj|
-        data[obj.id] = obj.formatted_secure_cache_data
+        data[obj.token_id] = obj.formatted_secure_cache_data
         data
       end
       Result.success(data_to_cache)

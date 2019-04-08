@@ -68,7 +68,7 @@ module TokenManagement
       decrypt_salt_rsp = decrypt_salt
       return decrypt_salt_rsp unless decrypt_salt_rsp[:success]
 
-      lc = LocalCipher.new(decrypt_salt_rsp.data[:plaintext])
+      lc = LocalCipher.new(decrypt_salt_rsp[:data][:plaintext])
       api_secret_e = lc.encrypt(@api_secret)
 
       begin
