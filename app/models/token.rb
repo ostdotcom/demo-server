@@ -37,7 +37,6 @@ class Token < ApplicationRecord
       token_id: token_id,
       api_key: api_key,
       api_secret: api_secret_e,
-      url_id: url_id,
       api_endpoint_id: api_endpoint_id
     }
   end
