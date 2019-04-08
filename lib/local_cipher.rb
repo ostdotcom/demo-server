@@ -19,9 +19,10 @@ class LocalCipher
       encrypted = ''
       encrypted << client.update(plaintext)
       encrypted << client.final
-      encrypted += (@splitter + iv)
+      encrypted_string = Base64.encode64(encrypted).gsub(/\n/, '')
+      encrypted_string += (@splitter + iv)
 
-      Result.success({ciphertext_blob: encrypted})
+      Result.success({ciphertext_blob: encrypted_string})
     rescue Exception => e
       Rails.logger.error("Local cipher encrypt error:: #{e.message}")
       return Result.error('l_lc_1', 'INTERNAL_SERVER_ERROR', 'Local cipher encrypt failed')
@@ -40,6 +41,7 @@ class LocalCipher
       client.decrypt
       client.key = @key
       client.iv = iv
+      encrypted_string = Base64.urlsafe_decode64(encrypted_string)
       plaintext = client.update(encrypted_string) + client.final
 
       Result.success({plaintext: plaintext})
