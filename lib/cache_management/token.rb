@@ -7,7 +7,7 @@ module CacheManagement
     # Fetch from db
     #
     def fetch_from_db(cache_miss_ids)
-      data_to_cache = ::Token.where(id: cache_miss_ids).inject({}) do |data, obj|
+      data_to_cache = ::Token.where(token_id: cache_miss_ids).inject({}) do |data, obj|
         data[obj.id] = obj.formated_cache_data
         data
       end

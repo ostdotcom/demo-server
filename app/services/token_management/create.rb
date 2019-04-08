@@ -60,14 +60,20 @@ module TokenManagement
       generate_salt_rsp = generate_salt
       return generate_salt_rsp unless generate_salt_rsp[:success]
 
-      lc = LocalCipher.new(generate_salt_rsp.data[:plaintext])
-      api_secret_e = lc.encrypt(@api_secret)
+      lc = LocalCipher.new(generate_salt_rsp[:data][:plaintext])
+      encrypt_rsp = lc.encrypt(@api_secret)
+      return encrypt_rsp unless encrypt_rsp[:success]
+
+      api_secret_e = encrypt_rsp[:data][:ciphertext_blob]
+
+      insert_params = {token_id: @token_id, api_endpoint_id: @api_endpoint_id, name: @name, symbol: @symbol,
+       url_id: @url_id, api_key: @api_key, encryption_salt: generate_salt_rsp[:data][:ciphertext_blob],
+       api_secret: api_secret_e, pc_token_holder_uuid: @pc_token_holder_uuid
+      }
 
       begin
-        Token.create!({token_id: @token_id, api_endpoint_id: @api_endpoint_id, name: @name, symbol: @symbol,
-                       url_id: @url_id, api_key: @api_key, encryption_salt: generate_salt_rsp.data[:ciphertext_blob],
-                       api_secret: api_secret_e, pc_token_holder_uuid: @pc_token_holder_uuid
-                      })
+        token = Token.new(insert_params)
+        token.save!
       rescue ActiveRecord::RecordNotUnique
         return Result.error('a_s_tm_c_1', 'INVALID_REQUEST', 'Token already registered')
       end
