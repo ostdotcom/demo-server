@@ -43,7 +43,7 @@ module DemoServer
     config.assets.prefix = "/js-css/common"
 
     # Use cache store
-    config.cache_store = :dalli_store, GlobalConstant::Cache.memcached_instances, GlobalConstant::Cache.memcached_config
+    config.cache_store = :dalli_store, GlobalConstant::Cache.endpoints, GlobalConstant::Cache.config
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths << "#{config.root}/lib/"

@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   def not_found
     http_code = 404
     if request.xhr?
-      response = {success: false, internal_id: "a_c_ac_1", code: "NOT_FOUND", msg: "Page not found", data: {}}
+      response = Result.error("a_c_ac_1", "NOT_FOUND", "Page not found")
       (render plain: Oj.dump(response, mode: :compat), status: http_code) and return
     else
       render file: "public/#{http_code}.html", layout: false, status: http_code and return

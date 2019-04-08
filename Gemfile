@@ -22,6 +22,8 @@ gem 'sanitize', '5.0.0'
 gem 'aws-sdk-kms', '1.13.0'
 # Memcache
 gem 'dalli', '2.7.9'
+# OST SDK
+gem 'ost-sdk-ruby', '2.0.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
