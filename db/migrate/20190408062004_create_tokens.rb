@@ -13,5 +13,6 @@ class CreateTokens < ActiveRecord::Migration[5.2]
       t.timestamps
     end
     add_index :tokens, [:url_id], unique: true, name: 'uk_1'
+    add_index :tokens, [:token_id, :api_endpoint_id], unique: true, name: 'uk_2'
   end
 end
