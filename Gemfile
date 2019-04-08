@@ -13,6 +13,8 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 # YUI compressor
 gem 'yui-compressor', '0.12.0'
+# Webpacker
+gem 'webpacker', '~> 4.0.2'
 
 # Json formatter
 gem 'oj', '3.3.8'
