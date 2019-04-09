@@ -17,12 +17,10 @@ module TokenManagement
     # Perform action
     #
     def perform
-
       r = validate_params
       return r unless r[:success]
 
       create_token
-
     end
 
     private
@@ -49,14 +47,12 @@ module TokenManagement
       return r unless r[:success]
 
       Result.success({})
-
     end
 
 
     # Create Token
     #
     def create_token
-
       generate_salt_rsp = generate_salt
       return generate_salt_rsp unless generate_salt_rsp[:success]
 
@@ -66,20 +62,17 @@ module TokenManagement
 
       api_secret_e = encrypt_rsp[:data][:ciphertext_blob]
 
-      insert_params = {token_id: @token_id, api_endpoint_id: @api_endpoint_id, name: @name, symbol: @symbol,
-       url_id: @url_id, api_key: @api_key, encryption_salt: generate_salt_rsp[:data][:ciphertext_blob],
-       api_secret: api_secret_e, pc_token_holder_uuid: @pc_token_holder_uuid
-      }
-
       begin
-        token = Token.new(insert_params)
+        token = Token.new({ost_token_id: @ost_token_id, api_endpoint_id: @api_endpoint_id, name: @name, symbol: @symbol,
+                           url_id: @url_id, api_key: @api_key, encryption_salt: generate_salt_rsp[:data][:ciphertext_blob],
+                           api_secret: api_secret_e, pc_token_holder_uuid: @pc_token_holder_uuid})
         token.save!
-      rescue ActiveRecord::RecordNotUnique
+      rescue StandardError => se
+        Rails.logger.error("create_token exception: #{se.message}")
         return Result.error('a_s_tm_c_1', 'INVALID_REQUEST', 'Token already registered')
       end
 
       Result.success({})
-
     end
 
     # Generate salt

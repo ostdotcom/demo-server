@@ -55,4 +55,28 @@ class ApplicationController < ActionController::Base
     sanitize_params_recursively(params)
   end
 
+  # Set cookie
+  #
+  def set_cookie(cookie_name, value, expires)
+    cookies[cookie_name.to_sym] = {
+      value: value,
+      expires: expires,
+      domain: ENV['DEMO_COOKIE_DOMAIN'],
+      http_only: true,
+      secure: !Rails.env.development?,
+      same_site: :strict
+    }
+  end
+
+  # Delete cookie
+  #
+  def delete_cookie(cookie_name)
+    cookies.delete(
+      cookie_name.to_sym,
+      domain: ENV['DEMO_COOKIE_DOMAIN'],
+      secure: !Rails.env.development?,
+      same_site: :strict
+    )
+  end
+
 end

@@ -6,7 +6,7 @@ class Token < ApplicationRecord
   def formated_cache_data
     {
       id: id,
-      token_id: token_id,
+      ost_token_id: ost_token_id,
       name: name,
       symbol: symbol,
       pc_token_holder_uuid: pc_token_holder_uuid,
@@ -34,7 +34,7 @@ class Token < ApplicationRecord
 
     {
       id: id,
-      token_id: token_id,
+      ost_token_id: ost_token_id,
       api_key: api_key,
       api_secret: api_secret_e,
       api_endpoint_id: api_endpoint_id
@@ -46,8 +46,10 @@ class Token < ApplicationRecord
   # Flush cache
   #
   def flush_cache
-    CacheManagement::Token.new([id]).clear
-    CacheManagement::TokenSecure.new([id]).clear
+    # TODO: Clear third cache as well
+    CacheManagement::TokenById.new([id]).clear
+    CacheManagement::TokenSecureById.new([id]).clear
+    CacheManagement::TokenByOstDetail.new([ost_token_id], {url_id: url_id}).clear
   end
 
 end

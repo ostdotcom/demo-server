@@ -1,7 +1,7 @@
 class CreateTokens < ActiveRecord::Migration[5.2]
   def change
     create_table :tokens do |t|
-      t.column :token_id, :integer, null: false
+      t.column :ost_token_id, :integer, null: false
       t.column :api_endpoint_id, :integer, null: false
       t.column :name, :string, null: false
       t.column :symbol, :string, null: false
@@ -13,6 +13,6 @@ class CreateTokens < ActiveRecord::Migration[5.2]
       t.timestamps
     end
     add_index :tokens, [:url_id], unique: true, name: 'uk_1'
-    add_index :tokens, [:token_id, :api_endpoint_id], unique: true, name: 'uk_2'
+    add_index :tokens, [:ost_token_id, :api_endpoint_id], unique: true, name: 'uk_2'
   end
 end

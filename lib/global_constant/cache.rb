@@ -6,7 +6,7 @@ module GlobalConstant
     class << self
 
       def endpoints
-        @endpoints = ENV["DEMO_MEMCACHE_ENDPOINTS"].to_s.split(',').map(&:strip)
+        @endpoints ||= ENV["DEMO_MEMCACHE_ENDPOINTS"].to_s.split(',').map(&:strip)
       end
 
       def config

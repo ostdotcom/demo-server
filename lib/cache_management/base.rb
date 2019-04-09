@@ -4,8 +4,9 @@ module CacheManagement
 
     # Initialize
     #
-    def initialize(ids)
+    def initialize(ids, options = {})
       @ids = ids
+      @options = options
       @id_to_cache_key_map = {}
     end
 

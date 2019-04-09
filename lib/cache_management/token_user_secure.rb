@@ -1,19 +1,19 @@
 module CacheManagement
 
-  class TokenSecure < CacheManagement::Base
+  class TokenUserSecure < CacheManagement::Base
 
     # Fetch
     #
     def fetch
       data_cache = super
-      data_cache.each do |token_id, token_data|
-        next if token_data.blank?
+      data_cache.each do |id, user_data|
+        next if user_data.blank?
         lc_to_decrypt = LocalCipher.new(GlobalConstant::Base.local_cipher_key)
-        lc_to_decrypt_res = lc_to_decrypt.decrypt(token_data[:api_secret])
+        lc_to_decrypt_res = lc_to_decrypt.decrypt(user_data[:password])
         if lc_to_decrypt_res[:success]
-          token_data[:api_secret] = lc_to_decrypt_res[:data][:plaintext]
+          user_data[:password] = lc_to_decrypt_res[:data][:plaintext]
         else
-          data_cache[token_id] = {}
+          data_cache[id] = {}
         end
       end
       data_cache
@@ -24,8 +24,8 @@ module CacheManagement
     # Fetch from db
     #
     def fetch_from_db(cache_miss_ids)
-      data_to_cache = ::Token.where(token_id: cache_miss_ids).inject({}) do |data, obj|
-        data[obj.token_id] = obj.formatted_secure_cache_data
+      data_to_cache = ::TokenUser.where(id: cache_miss_ids).inject({}) do |data, obj|
+        data[obj.id] = obj.formatted_secure_cache_data
         data
       end
       Result.success(data_to_cache)
@@ -34,7 +34,7 @@ module CacheManagement
     # Fetch cache key
     #
     def get_cache_key(id)
-      "#{GlobalConstant::Cache.key_prefix}_token_secure_#{id}"
+      "#{GlobalConstant::Cache.key_prefix}_token_user_secure_#{id}"
     end
 
     # Fetch cache expiry (in seconds)
