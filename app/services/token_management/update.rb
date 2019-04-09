@@ -31,7 +31,7 @@ module TokenManagement
       r = fetch_token_from_db
       return r unless r[:success]
 
-      r = validate_token_details
+      r = fetch_token_details
       return r unless r[:success]
 
       Result.success({})

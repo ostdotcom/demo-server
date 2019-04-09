@@ -46,6 +46,9 @@ module TokenManagement
       r = validate_token_holder_uuid
       return r unless r[:success]
 
+      r = fetch_token_details
+      return r unless r[:success]
+
       r = validate_token_details
       return r unless r[:success]
 
