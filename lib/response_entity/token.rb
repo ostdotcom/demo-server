@@ -7,13 +7,13 @@ module ResponseEntity
 
       def format(token)
         {
-          id: token['id'],
-          ost_token_id: token['ost_token_id'],
-          name: token['name'],
-          symbol: token['symbol'],
-          pc_token_holder_uuid: token['pc_token_holder_uuid'],
-          updated_at: token['updated_at'],
-          created_at: token['created_at'],
+          id: token[:id],
+          ost_token_id: token[:ost_token_id],
+          name: token[:name],
+          symbol: token[:symbol],
+          pc_token_holder_uuid: token[:pc_token_holder_uuid],
+          updated_at: token[:updated_at],
+          created_at: token[:created_at],
         }
       end
 
