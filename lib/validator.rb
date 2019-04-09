@@ -26,6 +26,12 @@ class Validator
       object =~ /\A[A-Z0-9\s]+\z/i
     end
 
+    # Is alpha space
+    #
+    def is_alpha_space?(object)
+      object =~ /\A[A-Z\s]+\z/i
+    end
+
     # Is uuid v4
     #
     def is_uuid_v4?(object)

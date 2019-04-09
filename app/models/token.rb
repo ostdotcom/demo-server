@@ -11,7 +11,9 @@ class Token < ApplicationRecord
       symbol: symbol,
       pc_token_holder_uuid: pc_token_holder_uuid,
       url_id: url_id,
-      api_endpoint_id: api_endpoint_id
+      api_endpoint_id: api_endpoint_id,
+      updated_at: updated_at,
+      created_at: created_at
     }
   end
 
@@ -37,7 +39,9 @@ class Token < ApplicationRecord
       ost_token_id: ost_token_id,
       api_key: api_key,
       api_secret: api_secret_e,
-      api_endpoint_id: api_endpoint_id
+      api_endpoint_id: api_endpoint_id,
+      updated_at: updated_at,
+      created_at: created_at
     }
   end
 
@@ -46,7 +50,6 @@ class Token < ApplicationRecord
   # Flush cache
   #
   def flush_cache
-    # TODO: Clear third cache as well
     CacheManagement::TokenById.new([id]).clear
     CacheManagement::TokenSecureById.new([id]).clear
     CacheManagement::TokenByOstDetail.new([ost_token_id], {url_id: url_id}).clear

@@ -6,11 +6,6 @@ module TokenManagement
     #
     def initialize(params)
       super(params)
-
-      @token = nil
-
-      @name = nil
-      @symbol = nil
     end
 
     # Perform action
@@ -20,6 +15,9 @@ module TokenManagement
       return r unless r[:success]
 
       update_token
+      return r unless r[:success]
+
+      final_response
     end
 
     private
@@ -42,16 +40,12 @@ module TokenManagement
     # fetch token from db
     #
     def fetch_token_from_db
-      @token = Token.where(ost_token_id: @ost_token_id, api_endpoint_id: @api_endpoint_id).first
+      @token_obj = Token.where(ost_token_id: @ost_token_id, api_endpoint_id: @api_endpoint_id).first
 
-      if @token.blank?
+      if @token_obj.blank?
         return Result.error('a_s_tm_u_1', 'INVALID_REQUEST',
                             'Token details not found')
       end
-
-      @name = @token.name
-      @symbol = @token.symbol
-
       Result.success({})
     end
 
@@ -68,9 +62,9 @@ module TokenManagement
       api_secret_e = encrypt_rsp[:data][:ciphertext_blob]
 
       begin
-        @token.api_key = @api_key
-        @token.api_secret = api_secret_e
-        @token.save!
+        @token_obj.api_key = @api_key
+        @token_obj.api_secret = api_secret_e
+        @token_obj.save!
       rescue StandardError => se
         Rails.logger.error("update_token exception: #{se.message}")
         return Result.error('a_s_tm_u_1', 'INVALID_REQUEST', 'Token update failed')
@@ -82,7 +76,7 @@ module TokenManagement
     # Decrypt salt
     #
     def decrypt_salt
-      Kms.new.decrypt(@token.encryption_salt)
+      Kms.new.decrypt(@token_obj.encryption_salt)
     end
 
 

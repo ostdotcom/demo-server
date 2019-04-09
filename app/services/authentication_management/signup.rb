@@ -6,6 +6,8 @@ module AuthenticationManagement
     #
     def initialize(params)
       super(params)
+
+      @fullname = params[:fullname]
     end
 
     # Perform action
@@ -17,7 +19,7 @@ module AuthenticationManagement
       r = create_token_user
       return r unless r[:success]
 
-      Result.success({cookie_value: cookie_value})
+      final_response
     end
 
     private
@@ -26,6 +28,9 @@ module AuthenticationManagement
     #
     def validate_params
       r = super
+      return r unless r[:success]
+
+      r = validate_fullname
       return r unless r[:success]
 
       r = validate_existing_user
@@ -49,17 +54,29 @@ module AuthenticationManagement
     def create_token_user
       generate_salt_rsp = Kms.new.generate_data_key
       return generate_salt_rsp unless generate_salt_rsp[:success]
-
       lc = LocalCipher.new(generate_salt_rsp[:data][:plaintext])
-      encrypt_rsp = lc.encrypt(@password)
-      return encrypt_rsp unless encrypt_rsp[:success]
 
-      password_e = encrypt_rsp[:data][:ciphertext_blob]
+      # Password
+      encrypt_password_rsp = lc.encrypt(@password)
+      return encrypt_rsp unless encrypt_password_rsp[:success]
+      password_e = encrypt_password_rsp[:data][:ciphertext_blob]
+
+      # User Pin Salt
+      encrypt_user_pin_salt_rsp = lc.encrypt(BipMnemonic.to_mnemonic(bits: 256))
+      return encrypt_rsp unless encrypt_user_pin_salt_rsp[:success]
+      user_pin_salt_e = encrypt_user_pin_salt_rsp[:data][:ciphertext_blob]
 
       begin
-        @token_user_obj = TokenUser.new({token_id: @token_id, username: @username, password: password_e,
-                                    encryption_salt: generate_salt_rsp[:data][:ciphertext_blob],
-                                    cookie_salt: SecureRandom.hex(35)})
+        @token_user_obj = TokenUser.new({
+                                          fullname: @fullname,
+                                          username: @username,
+                                          password: password_e,
+                                          user_pin_salt: user_pin_salt_e,
+                                          cookie_salt: SecureRandom.hex(35),
+                                          encryption_salt: generate_salt_rsp[:data][:ciphertext_blob],
+                                          token_id: @token_id,
+                                          ost_token_id: @token.ost_token_id
+                                        })
         @token_user_obj.save!
       rescue StandardError => se
         Rails.logger.error("create_token_user exception: #{se.message}")

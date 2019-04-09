@@ -40,11 +40,16 @@ class TokenUser < ApplicationRecord
   def formated_cache_data
     {
       id: id,
+      fullname: fullname,
       token_id: token_id,
+      ost_token_id: ost_token_id,
       uuid: uuid,
       token_holder_address: token_holder_address,
       device_manager_address: device_manager_address,
-      recovery_address: recovery_address
+      recovery_address: recovery_address,
+      ost_user_status: ost_user_status,
+      updated_at: updated_at,
+      created_at: created_at
     }
   end
 
@@ -56,21 +61,35 @@ class TokenUser < ApplicationRecord
     encryption_salt_d = decrypt_salt_rsp[:data][:plaintext]
 
     lc_to_decrypt = LocalCipher.new(encryption_salt_d)
-    lc_to_decrypt_res = lc_to_decrypt.decrypt(password)
-    return {} unless lc_to_decrypt_res[:success]
-    password_d = lc_to_decrypt_res[:data][:plaintext]
-
     lc_to_encrypt = LocalCipher.new(GlobalConstant::Base.local_cipher_key)
-    lc_to_encrypt_res = lc_to_encrypt.encrypt(password_d)
-    return {} unless lc_to_encrypt_res[:success]
-    password_e = lc_to_encrypt_res[:data][:ciphertext_blob]
+
+    # Password
+    lc_to_decrypt_password_res = lc_to_decrypt.decrypt(password)
+    return {} unless lc_to_decrypt_password_res[:success]
+    password_d = lc_to_decrypt_password_res[:data][:plaintext]
+
+    lc_to_encrypt_password_res = lc_to_encrypt.encrypt(password_d)
+    return {} unless lc_to_encrypt_password_res[:success]
+    password_e = lc_to_encrypt_password_res[:data][:ciphertext_blob]
+
+    # User Pin Salt
+    lc_to_decrypt_user_pin_salt_res = lc_to_decrypt.decrypt(user_pin_salt)
+    return {} unless lc_to_decrypt_user_pin_salt_res[:success]
+    user_pin_salt_d = lc_to_decrypt_user_pin_salt_res[:data][:plaintext]
+
+    lc_to_encrypt_user_pin_salt_res = lc_to_encrypt.encrypt(user_pin_salt_d)
+    return {} unless lc_to_encrypt_user_pin_salt_res[:success]
+    user_pin_salt_e = lc_to_encrypt_user_pin_salt_res[:data][:ciphertext_blob]
 
     {
       id: id,
-      token_id: token_id,
       username: username,
       password: password_e,
+      user_pin_salt: user_pin_salt_e,
       cookie_salt: cookie_salt,
+      token_id: token_id,
+      ost_token_id: ost_token_id,
+      updated_at: updated_at,
       created_at: created_at
     }
   end

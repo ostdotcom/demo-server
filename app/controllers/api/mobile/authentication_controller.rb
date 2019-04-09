@@ -5,9 +5,8 @@ class Api::Mobile::AuthenticationController < Api::Mobile::BaseController
   #
   def signup
     response = AuthenticationManagement::Signup.new(params).perform()
-    if response[:success]
-      set_cookie(GlobalConstant::Cookie.user_authentication_cookie, response[:data][:cookie_value], 1.year)
-      response = Result.success({})
+    if response[:success] && response[:data][:cookie_value].present?
+      set_cookie(GlobalConstant::Cookie.user_authentication_cookie, response[:data].delete(:cookie_value), 1.year)
     else
       delete_cookie(GlobalConstant::Cookie.user_authentication_cookie)
     end
@@ -18,9 +17,8 @@ class Api::Mobile::AuthenticationController < Api::Mobile::BaseController
   #
   def login
     response = AuthenticationManagement::Login.new(params).perform()
-    if response[:success]
-      set_cookie(GlobalConstant::Cookie.user_authentication_cookie, response[:data][:cookie_value], 1.year)
-      response = Result.success({})
+    if response[:success] && response[:data][:cookie_value].present?
+      set_cookie(GlobalConstant::Cookie.user_authentication_cookie, response[:data].delete(:cookie_value), 1.year)
     else
       delete_cookie(GlobalConstant::Cookie.user_authentication_cookie)
     end

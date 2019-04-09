@@ -17,7 +17,7 @@ module AuthenticationManagement
       r = update_token_user
       return r unless r[:success]
 
-      Result.success({cookie_value: cookie_value})
+      final_response
     end
 
     private

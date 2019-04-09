@@ -10,6 +10,7 @@ module TokenManagement
       @api_secret = params[:api_secret]
       @api_endpoint = params[:api_endpoint]
       @api_endpoint_id = nil
+      @token_obj = nil
     end
 
     private
@@ -134,6 +135,13 @@ module TokenManagement
       end
 
       Result.success({})
+    end
+
+    # Final response
+    #
+    def final_response
+      token = CacheManagement::TokenById.new([@token_obj.id])
+      Result.success({result_type: 'token', token: ResponseEntity::Token.format(token)})
     end
 
   end

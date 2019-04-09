@@ -13,6 +13,7 @@ module AuthenticationManagement
       @token_user_obj = nil
       @api_endpoint = nil
 
+      @token_user = nil
       @token_user_secure = nil
     end
 
@@ -33,7 +34,7 @@ module AuthenticationManagement
     # Validate Username
     #
     def validate_username
-      return Result.error('a_s_am_b_3', 'INVALID_REQUEST',
+      return Result.error('a_s_am_b_1', 'INVALID_REQUEST',
                           'Invalid username') unless Validator.is_alphanumeric?(@username)
 
       Result.success({})
@@ -42,8 +43,17 @@ module AuthenticationManagement
     # Validate Password
     #
     def validate_password
-      return Result.error('a_s_tm_b_4', 'INVALID_REQUEST',
+      return Result.error('a_s_tm_b_2', 'INVALID_REQUEST',
                           'Invalid password') unless @password.present?
+
+      Result.success({})
+    end
+
+    # Validate Fullname
+    #
+    def validate_fullname
+      return Result.error('a_s_am_b_3', 'INVALID_REQUEST',
+                          'Invalid username') unless Validator.is_alpha_space?(@fullname)
 
       Result.success({})
     end
@@ -60,11 +70,16 @@ module AuthenticationManagement
       @api_endpoint ||= ApiEndpoint.id_to_endpoint_map[@token.api_endpoint_id]
     end
 
-    # Get cookie value
+    # Final response
     #
-    def cookie_value
-      @token_user_secure ||= CacheManagement::TokenUserSecure.new([@token_user_obj[:id]]).fetch()
-      TokenUser.get_cookie_value(@token_user_secure)
+    def final_response
+      @token_user_secure ||= CacheManagement::TokenUserSecure.new([@token_user_obj[:id]]).fetch()[@token_user_obj[:id]]
+      @token_user ||= CacheManagement::TokenUser.new([@token_user_obj[:id]]).fetch()[@token_user_obj[:id]]
+      Result.success({
+                       result_type: 'current_user',
+                       current_user: ResponseEntity::CurrentTokenUser.format(@token_user, @token_user_secure),
+                       cookie_value: TokenUser.get_cookie_value(@token_user_secure)
+                     })
     end
 
   end

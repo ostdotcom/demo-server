@@ -24,6 +24,8 @@ gem 'sanitize', '5.0.0'
 gem 'aws-sdk-kms', '1.13.0'
 # Memcache
 gem 'dalli', '2.7.9'
+# BIP39 Mnemonic
+gem 'bip_mnemonic', '0.0.2'
 # OST SDK
 gem 'ost-sdk-ruby', '2.0.0'
 
