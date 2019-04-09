@@ -32,7 +32,9 @@ class ApplicationController < ActionController::Base
     render plain: '', :status => 200
   end
 
-  def index
+  # React App specific layout
+  #
+  def reactapp
     render :layout => 'reactapp'
   end
 

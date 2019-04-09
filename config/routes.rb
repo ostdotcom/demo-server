@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
 
   scope '', controller: 'application', :format => false do
-    get '/' => :index
-    get '/custom-transactions' => :index
-    get '/user/:id/ost-users' => :index
-    get '/user/:id/devices' => :index
-    get '/token' => :index
+    get '/' => :reactapp
+    get '/custom-transactions' => :reactapp
+    get '/user/:id/ost-users' => :reactapp
+    get '/user/:id/devices' => :reactapp
+    get '/token' => :reactapp
     get '/health-checker' => :health_checker
   end
 
