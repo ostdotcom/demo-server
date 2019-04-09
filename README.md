@@ -21,4 +21,16 @@ Things you may want to cover:
 
 * Deployment instructions
 
-* ...
+### Starting App
+
+To start the rails app:
+```bash
+bundle install
+source env.sh
+rails s
+```
+
+For development, you would also need to start webpack dev server (in a separate terminal window). To start the webpack dev server:
+```bash
+./bin/webpack-dev-server
+```
