@@ -17,5 +17,6 @@ class CreateTokenUsers < ActiveRecord::Migration[5.2]
       t.timestamps
     end
     add_index :token_users, [:token_id, :username], unique: true, name: 'uk_1'
+    add_index :token_users, [:token_id, :fullname], unique: false, name: 'token_id_fullname'
   end
 end
