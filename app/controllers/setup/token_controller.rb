@@ -1,5 +1,5 @@
-class Api::Setup::TokenController < ApplicationController
-  skip_before_action :verify_authenticity_token
+class Setup::TokenController < ApplicationController
+  #skip_before_action :verify_authenticity_token
 
   # Create token
   #

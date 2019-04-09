@@ -1,4 +1,4 @@
-class Api::Mobile::AuthenticationController < Api::Mobile::BaseController
+class Api::TokenUserController < Api::BaseController
   skip_before_action :authenticate_user
 
   # Signup

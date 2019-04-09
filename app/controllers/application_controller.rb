@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   # Protect from forgery
   #
-  protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
 
   # Sanitize params
   #
