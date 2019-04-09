@@ -41,7 +41,7 @@ module TokenUserManagement
           users << ResponseEntity::TokenUser.format(token_user)
         end
       rescue => e
-        Rails.logger.error("get_users exception: #{se.message}")
+        Rails.logger.error("get_users exception: #{e.message}")
         return Result.error('a_s_tum_l_1', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
