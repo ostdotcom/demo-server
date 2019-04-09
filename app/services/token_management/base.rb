@@ -37,7 +37,7 @@ module TokenManagement
     def validate_ost_token_id
       return Result.error('a_s_tm_b_1', 'INVALID_REQUEST',
                           'Invalid OST token id') unless Validator.is_integer?(@ost_token_id)
-
+      @ost_token_id = @ost_token_id.to_i
       Result.success({})
     end
 

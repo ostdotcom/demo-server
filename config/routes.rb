@@ -10,13 +10,13 @@ Rails.application.routes.draw do
   end
 
   scope 'api/setup/token', controller: 'api/setup/token', :format => false do
-    get 'create' => :create, via: :POST
-    get 'update' => :update, via: :POST
+    match 'create' => :create, via: :POST
+    match 'update' => :update, via: :POST
   end
 
   scope 'api/:url_id-:ost_token_id', :format => false do
-    get 'signup' => :signup, controller: 'api/mobile/authenticate', via: :POST
-    get 'login' => :login, controller: 'api/mobile/authenticate', via: :POST
+    match 'signup' => :signup, controller: 'api/mobile/authenticate', via: :POST
+    match 'login' => :login, controller: 'api/mobile/authenticate', via: :POST
   end
 
   # Route not found handler. Should be the last entry here
