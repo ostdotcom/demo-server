@@ -20,17 +20,22 @@ ActiveRecord::Schema.define(version: 2019_04_08_084642) do
   end
 
   create_table "token_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "token_id", null: false
+    t.string "fullname", null: false
     t.string "username", null: false
     t.text "password", null: false
+    t.text "user_pin_salt", null: false
     t.binary "encryption_salt", null: false
     t.string "cookie_salt", null: false
+    t.integer "token_id", null: false
+    t.integer "ost_token_id", null: false
     t.string "uuid"
     t.string "token_holder_address"
     t.string "device_manager_address"
     t.string "recovery_address"
+    t.string "ost_user_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["token_id", "fullname"], name: "token_id_fullname"
     t.index ["token_id", "username"], name: "uk_1", unique: true
   end
 
