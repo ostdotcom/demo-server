@@ -8,18 +8,34 @@ module AuthenticationManagement
       super(params)
 
       @fullname = params[:fullname]
+
+      @token_secure = nil
+      @api_endpoint = nil
+      @uuid = nil
+      @ost_user_status = nil
     end
 
     # Perform action
     #
     def perform
+
       r = validate_params
       return r unless r[:success]
 
-      r = create_token_user
+      r = fetch_token_secure
+      return r unless r[:success]
+
+      r = fetch_api_endpoint
+      return r unless r[:success]
+
+      r = create_token_user_in_ost
+      return r unless r[:success]
+
+      r = create_token_user_in_db
       return r unless r[:success]
 
       final_response
+
     end
 
     private
@@ -49,9 +65,48 @@ module AuthenticationManagement
       Result.success({})
     end
 
-    # Create token user
+    # Fetch Token Secure data
     #
-    def create_token_user
+    def fetch_token_secure
+      @token_secure = CacheManagement::TokenSecureById.new([@token_id]).fetch()[@token_id]
+      return Result.error('a_s_um_s_2',
+                          'INVALID_REQUEST',
+                          'Invalid URL Identifier') if @token_secure.blank?
+      Result.success({})
+    end
+
+    # Fetch API Endpoint
+    #
+    def fetch_api_endpoint
+      @api_endpoint = ApiEndpoint.id_to_endpoint_map[@token[:api_endpoint_id]]
+      return Result.error('a_s_um_s_3',
+                          'INVALID_REQUEST',
+                          'Invalid URL Identifier') if @api_endpoint.blank?
+      Result.success({})
+    end
+
+    # Create token user in OST
+    #
+    def create_token_user_in_ost
+
+      ost_api_helper = OstApiHelper.new({api_key: @token_secure[:api_key],
+                                         api_secret: @token_secure[:api_secret], api_endpoint: @api_endpoint})
+
+      response = ost_api_helper.create_user
+      unless response[:success]
+        return Result.error('a_s_um_s_4', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+      end
+
+      ost_user_data = response[:data][response[:data][:result_type]]
+      @uuid = ost_user_data[:id]
+      @ost_user_status = ost_user_data[:status]
+
+      Result.success({})
+    end
+
+    # Create token user in DB
+    #
+    def create_token_user_in_db
       generate_salt_rsp = Kms.new.generate_data_key
       return generate_salt_rsp unless generate_salt_rsp[:success]
       lc = LocalCipher.new(generate_salt_rsp[:data][:plaintext])
@@ -75,7 +130,9 @@ module AuthenticationManagement
                                           cookie_salt: SecureRandom.hex(35),
                                           encryption_salt: generate_salt_rsp[:data][:ciphertext_blob],
                                           token_id: @token_id,
-                                          ost_token_id: @token.ost_token_id
+                                          ost_token_id: @token[:ost_token_id],
+                                          uuid: @uuid,
+                                          ost_user_status: @ost_user_status
                                         })
         @token_user_obj.save!
       rescue ActiveRecord::RecordNotUnique => e
