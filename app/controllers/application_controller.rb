@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::Base
   # Protect from forgery
   #
-  protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
+  skip_before_action :verify_authenticity_token
 
   # Sanitize params
   #
