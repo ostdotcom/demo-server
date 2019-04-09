@@ -50,6 +50,6 @@ const deviceMap = [
   }
 ];
 
-const apiRoot = process.env.REACT_APP_API_ROOT;
+const apiRoot = 'https://s5-mappy.stagingost.com/';
 
 export { dataMap, deviceMap, apiRoot };

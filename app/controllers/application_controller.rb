@@ -32,6 +32,10 @@ class ApplicationController < ActionController::Base
     render plain: '', :status => 200
   end
 
+  def index
+    render :layout => 'reactapp'
+  end
+
   private
 
   # Set response headers
