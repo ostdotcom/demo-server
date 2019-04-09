@@ -62,7 +62,7 @@ module AuthenticationManagement
       password_e = encrypt_password_rsp[:data][:ciphertext_blob]
 
       # User Pin Salt
-      encrypt_user_pin_salt_rsp = lc.encrypt(BipMnemonic.to_mnemonic(bits: 256))
+      encrypt_user_pin_salt_rsp = lc.encrypt(SecureRandom.hex(100))
       return encrypt_rsp unless encrypt_user_pin_salt_rsp[:success]
       user_pin_salt_e = encrypt_user_pin_salt_rsp[:data][:ciphertext_blob]
 
