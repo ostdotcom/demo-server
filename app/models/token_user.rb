@@ -53,17 +53,17 @@ class TokenUser < ApplicationRecord
   def formatted_secure_cache_data
     decrypt_salt_rsp = Kms.new.decrypt(encryption_salt)
     return {} unless decrypt_salt_rsp[:success]
-    encryption_salt_d = decrypt_salt_rsp.data[:plaintext]
+    encryption_salt_d = decrypt_salt_rsp[:data][:plaintext]
 
     lc_to_decrypt = LocalCipher.new(encryption_salt_d)
     lc_to_decrypt_res = lc_to_decrypt.decrypt(password)
     return {} unless lc_to_decrypt_res[:success]
-    password_d = lc_to_decrypt_res.data[:plaintext]
+    password_d = lc_to_decrypt_res[:data][:plaintext]
 
     lc_to_encrypt = LocalCipher.new(GlobalConstant::Base.local_cipher_key)
     lc_to_encrypt_res = lc_to_encrypt.encrypt(password_d)
     return {} unless lc_to_encrypt_res[:success]
-    password_e = lc_to_encrypt_res.data[:ciphertext_blob]
+    password_e = lc_to_encrypt_res[:data][:ciphertext_blob]
 
     {
       id: id,

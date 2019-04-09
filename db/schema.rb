@@ -24,14 +24,18 @@ ActiveRecord::Schema.define(version: 2019_04_08_084642) do
     t.string "username", null: false
     t.text "password", null: false
     t.binary "encryption_salt", null: false
+    t.string "cookie_salt", null: false
     t.string "uuid"
+    t.string "token_holder_address"
+    t.string "device_manager_address"
+    t.string "recovery_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["token_id", "username"], name: "uk_1", unique: true
   end
 
   create_table "tokens", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "token_id", null: false
+    t.integer "ost_token_id", null: false
     t.integer "api_endpoint_id", null: false
     t.string "name", null: false
     t.string "symbol", null: false
@@ -42,7 +46,7 @@ ActiveRecord::Schema.define(version: 2019_04_08_084642) do
     t.string "pc_token_holder_uuid", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["token_id", "api_endpoint_id"], name: "uk_2", unique: true
+    t.index ["ost_token_id", "api_endpoint_id"], name: "uk_2", unique: true
     t.index ["url_id"], name: "uk_1", unique: true
   end
 

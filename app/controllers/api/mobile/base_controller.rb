@@ -36,9 +36,8 @@ class Api::Mobile::BaseController < ApplicationController
       token_id = params[:token_user][:token_id]
       params[:token] = CacheManagement::TokenById.new([token_id]).fetch()[token_id]
     else
-      params[:token] = CacheManagement::TokenById.new([params[:ost_token_id]], {url_id: params[:url_id]}).fetch()[params[:ost_token_id]]
+      params[:token] = CacheManagement::TokenByOstDetail.new([params[:ost_token_id]], {url_id: params[:url_id]}).fetch()[params[:ost_token_id]]
     end
-
 
     if params[:token].blank? || params[:token][:url_id] != params[:url_id] || params[:token][:ost_token_id] != params[:ost_token_id]
       response = Result.error("a_c_a_m_bc_2", "UNAUTHORISED", "Not allowed to access the endpoint")

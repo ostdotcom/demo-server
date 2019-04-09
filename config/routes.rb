@@ -14,9 +14,9 @@ Rails.application.routes.draw do
     match 'update' => :update, via: :POST
   end
 
-  scope 'api/:url_id-:ost_token_id', :format => false do
-    match 'signup' => :signup, controller: 'api/mobile/authenticate', via: :POST
-    match 'login' => :login, controller: 'api/mobile/authenticate', via: :POST
+  scope 'api/:url_id/:ost_token_id', :format => false do
+    match 'signup' => :signup, controller: 'api/mobile/authentication', via: :POST
+    match 'login' => :login, controller: 'api/mobile/authentication', via: :POST
   end
 
   # Route not found handler. Should be the last entry here
