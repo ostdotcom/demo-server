@@ -21,6 +21,20 @@ class OstApiHelper
     handle_ost_response(response)
   end
 
+  # Get User
+  #
+  def get_user(params)
+    response = users_service.get(params)
+    handle_ost_response(response)
+  end
+
+  # Register Device
+  #
+  def register_device(params)
+    response = devices_service.create(params)
+    handle_ost_response(response)
+  end
+
   private
 
   # Object to call Tokens Service related endpoints
@@ -33,6 +47,12 @@ class OstApiHelper
   #
   def users_service
     @users_service ||= @sdk_obj.services.users
+  end
+
+  # Object to call Devices Service related endpoints
+  #
+  def devices_service
+    @devices_service ||= @sdk_obj.services.devices
   end
 
   # handle OST response

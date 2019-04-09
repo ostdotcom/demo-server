@@ -7,7 +7,7 @@ module ResponseEntity
 
       def format(token_user)
         {
-          id: token_user[:id],
+          app_user_id: token_user[:id],
           fullname: token_user[:fullname],
           token_id: token_user[:ost_token_id],
           user_id: token_user[:uuid],

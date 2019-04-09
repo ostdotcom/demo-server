@@ -44,6 +44,10 @@ class Validator
       object =~ /\A#{URI::regexp(['http', 'https'])}\z/i
     end
 
+    def is_ethereum_address?(object)
+      object =~ /\A0x[a-f0-9]{40}\z/i
+    end
+
   end
 
 end

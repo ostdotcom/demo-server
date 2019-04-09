@@ -38,7 +38,10 @@ class Api::BaseController < ApplicationController
       params[:token] = CacheManagement::TokenByOstDetail.new([params[:ost_token_id]], {url_id: params[:url_id]}).fetch()[params[:ost_token_id]]
     end
 
-    if params[:token].blank? || params[:token][:url_id] != params[:url_id] || params[:token][:ost_token_id] != params[:ost_token_id]
+    if params[:token].blank? ||
+      params[:token][:url_id] != params[:url_id] ||
+      params[:token][:ost_token_id] != params[:ost_token_id] ||
+      (params[:token_user].present? && params[:token_user][:token_id] != params[:token][:id])
       response = Result.error("a_c_a_m_bc_2", "UNAUTHORISED", "Not allowed to access the endpoint")
       (render plain: Oj.dump(response, mode: :compat), status: '401') and return
     end
