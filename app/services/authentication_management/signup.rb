@@ -78,9 +78,12 @@ module AuthenticationManagement
                                           ost_token_id: @token.ost_token_id
                                         })
         @token_user_obj.save!
-      rescue StandardError => se
-        Rails.logger.error("create_token_user exception: #{se.message}")
+      rescue ActiveRecord::RecordNotUnique => e
+        Rails.logger.error("create_token_user exception: #{e.message}")
         return Result.error('a_s_um_s_2', 'INVALID_REQUEST', 'Token user signup failed')
+      rescue => e
+        Rails.logger.error("create_token_user exception: #{e.message}")
+        return Result.error('a_s_um_s_3', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       Result.success({})

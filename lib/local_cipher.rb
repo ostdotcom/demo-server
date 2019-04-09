@@ -23,9 +23,9 @@ class LocalCipher
       encrypted_string += (@splitter + iv)
 
       Result.success({ciphertext_blob: encrypted_string})
-    rescue Exception => e
+    rescue => e
       Rails.logger.error("Local cipher encrypt error:: #{e.message}")
-      return Result.error('l_lc_1', 'INTERNAL_SERVER_ERROR', 'Local cipher encrypt failed')
+      return Result.error('l_lc_1', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
     end
   end
 
@@ -45,9 +45,9 @@ class LocalCipher
       plaintext = client.update(encrypted_string) + client.final
 
       Result.success({plaintext: plaintext})
-    rescue Exception => e
+    rescue => e
       Rails.logger.error("Local cipher decrypt error:: #{e.message}")
-      return Result.error('l_lc_2', 'INTERNAL_SERVER_ERROR', 'Local cipher decrypt failed')
+      return Result.error('l_lc_2', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
     end
   end
 

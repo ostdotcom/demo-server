@@ -70,9 +70,12 @@ module TokenManagement
                            url_id: @url_id, api_key: @api_key, encryption_salt: generate_salt_rsp[:data][:ciphertext_blob],
                            api_secret: api_secret_e, pc_token_holder_uuid: @pc_token_holder_uuid})
         @token_obj.save!
-      rescue StandardError => se
-        Rails.logger.error("create_token exception: #{se.message}")
+      rescue ActiveRecord::RecordNotUnique => e
+        Rails.logger.error("create_token exception: #{e.message}")
         return Result.error('a_s_tm_c_1', 'INVALID_REQUEST', 'Token already registered')
+      rescue => e
+        Rails.logger.error("create_token exception: #{e.message}")
+        return Result.error('a_s_tm_c_2', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       Result.success({})

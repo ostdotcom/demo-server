@@ -65,9 +65,9 @@ module TokenManagement
         @token_obj.api_key = @api_key
         @token_obj.api_secret = api_secret_e
         @token_obj.save!
-      rescue StandardError => se
-        Rails.logger.error("update_token exception: #{se.message}")
-        return Result.error('a_s_tm_u_1', 'INVALID_REQUEST', 'Token update failed')
+      rescue => e
+        Rails.logger.error("update_token exception: #{e.message}")
+        return Result.error('a_s_tm_u_2', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       Result.success({})

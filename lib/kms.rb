@@ -14,7 +14,7 @@ class Kms
       return Result.success({plaintext: plaintext})
     rescue => e
       Rails.logger.error("KMS Decrypt error:: #{e.message}")
-      return Result.error('l_k_1', 'INTERNAL_SERVER_ERROR', 'KMS decrypt failed')
+      return Result.error('l_k_1', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
     end
   end
 
@@ -27,7 +27,7 @@ class Kms
       return Result.success({ciphertext_blob: ciphertext_blob})
     rescue => e
       Rails.logger.error("KMS Encrypt error:: #{e.message}")
-      return Result.error('l_k_2', 'INTERNAL_SERVER_ERROR', 'KMS encrypt failed')
+      return Result.error('l_k_2', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
     end
   end
 
@@ -39,7 +39,7 @@ class Kms
       return Result.success({ciphertext_blob: resp.ciphertext_blob, plaintext: resp.plaintext})
     rescue => e
       Rails.logger.error("KMS Generate error:: #{e.message}")
-      return Result.error('l_k_3', 'INTERNAL_SERVER_ERROR', 'KMS generate failed')
+      return Result.error('l_k_3', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
     end
   end
 

@@ -55,9 +55,9 @@ module AuthenticationManagement
       begin
         @token_user_obj.cookie_salt = SecureRandom.hex(35)
         @token_user_obj.save!
-      rescue StandardError => se
-        Rails.logger.error("update_token_user exception: #{se.message}")
-        return Result.error('a_s_um_l_3', 'INVALID_REQUEST', 'Something went wrong')
+      rescue => e
+        Rails.logger.error("update_token_user exception: #{e.message}")
+        return Result.error('a_s_um_l_3', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       Result.success({})
