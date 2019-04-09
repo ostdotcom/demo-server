@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 2019_04_08_084642) do
     t.string "pc_token_holder_uuid", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["token_id", "api_endpoint_id"], name: "uk_2", unique: true
     t.index ["url_id"], name: "uk_1", unique: true
   end
 

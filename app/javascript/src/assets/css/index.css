@@ -1,0 +1,7 @@
+
+svg.loader-icon{
+    position: absolute;
+    top: calc(50% - 25px);
+    left: calc(50% - 25px);
+    z-index: 9999;
+}

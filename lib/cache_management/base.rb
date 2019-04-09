@@ -36,14 +36,14 @@ module CacheManagement
 
         fetch_data_rsp = fetch_from_db(ids_for_cache_miss)
 
-        data_to_set = fetch_data_rsp.data || {}
+        data_to_set = fetch_data_rsp[:data] || {}
 
         # to ensure we do not always query DB for invalid ids being cached, we would set {} in cache against such ids
         @ids.each do |id|
           data_to_set[id] = {} if data_from_cache[@id_to_cache_key_map[id]].nil? && data_to_set[id].nil?
         end
 
-        set_cache(data_to_set) if fetch_data_rsp.success?
+        set_cache(data_to_set) if fetch_data_rsp[:success]
 
       end
 
