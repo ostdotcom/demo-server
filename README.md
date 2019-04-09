@@ -32,5 +32,7 @@ rails s
 
 For development, you would also need to start webpack dev server (in a separate terminal window). To start the webpack dev server:
 ```bash
+brew install yarn
+yarn install
 ./bin/webpack-dev-server
 ```
