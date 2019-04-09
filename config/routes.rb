@@ -1,11 +1,6 @@
 Rails.application.routes.draw do
 
   scope '', controller: 'application', :format => false do
-    get '/' => :reactapp
-    get '/custom-transactions' => :reactapp
-    get '/user/:id/ost-users' => :reactapp
-    get '/user/:id/devices' => :reactapp
-    get '/token' => :reactapp
     get '/health-checker' => :health_checker
   end
 
