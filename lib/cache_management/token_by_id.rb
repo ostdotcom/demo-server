@@ -17,7 +17,7 @@ module CacheManagement
     # Fetch cache key
     #
     def get_cache_key(id)
-      "#{GlobalConstant::Cache.key_prefix}_token_by_id_#{id}"
+      "token_by_id_#{id}"
     end
 
     # Fetch cache expiry (in seconds)

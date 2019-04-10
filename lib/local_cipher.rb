@@ -24,7 +24,7 @@ class LocalCipher
 
       Result.success({ciphertext_blob: encrypted_string})
     rescue => e
-      Rails.logger.error("Local cipher encrypt error:: #{e.message}")
+      Rails.logger.error("Local cipher encrypt error:: #{e.message} backtrace:: #{e.backtrace}")
       return Result.error('l_lc_1', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
     end
   end
@@ -33,7 +33,6 @@ class LocalCipher
   #
   def decrypt(ciphertext_blob)
     begin
-
       arr = ciphertext_blob.split(@splitter)
       encrypted_string = arr[0]
       iv = arr[1]
@@ -46,7 +45,7 @@ class LocalCipher
 
       Result.success({plaintext: plaintext})
     rescue => e
-      Rails.logger.error("Local cipher decrypt error:: #{e.message}")
+      Rails.logger.error("Local cipher decrypt error:: #{e.message} backtrace:: #{e.backtrace}")
       return Result.error('l_lc_2', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
     end
   end

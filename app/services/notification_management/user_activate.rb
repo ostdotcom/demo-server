@@ -62,7 +62,7 @@ module NotificationManagement
     #
     def validate_user_status
       return Result.error('a_s_nm_ua_2', 'INVALID_REQUEST',
-                          'User already activated') if @token_user[:status] != 'CREATED'
+                          'User already activated') if @token_user[:ost_user_status] != 'CREATED'
       Result.success({})
     end
 
@@ -112,7 +112,7 @@ module NotificationManagement
         token_user_obj.device_manager_address = @ost_user_data[:token_holder_address]
         token_user_obj.recovery_address = @ost_user_data[:recovery_address]
         token_user_obj.ost_user_status = @ost_user_data[:status]
-        token_user_obj.save!
+        token_user_obj.save! if token_user_obj.changed?
       rescue => e
         Rails.logger.error("update_token_user exception: #{e.message}")
         return Result.error('a_s_um_s_5', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')

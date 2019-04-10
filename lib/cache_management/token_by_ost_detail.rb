@@ -17,7 +17,7 @@ module CacheManagement
     # Fetch cache key
     #
     def get_cache_key(id)
-      "#{GlobalConstant::Cache.key_prefix}_token_by_ost_details_#{id}_#{@options[:url_id]}"
+      "token_by_ost_details_#{id}_#{@options[:url_id]}"
     end
 
     # Fetch cache expiry (in seconds)

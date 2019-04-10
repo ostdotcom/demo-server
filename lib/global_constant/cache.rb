@@ -14,16 +14,13 @@ module GlobalConstant
           expires_in: 1.day,
           compress: false,
           down_retry_delay: 5,
-          socket_timeout: 1
+          socket_timeout: 1,
+          namespace: ENV["DEMO_MEMCACHE_KEY_PREFIX"]
         }
       end
 
       def default_ttl
         24.hours.to_i
-      end
-
-      def key_prefix
-        @key_prefix ||= ENV["DEMO_MEMCACHE_KEY_PREFIX"]
       end
 
     end
