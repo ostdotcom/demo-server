@@ -73,7 +73,7 @@ module DeviceManagement
     #
     def validate_api_signer_address
       return Result.error('a_s_dm_r_3', 'INVALID_REQUEST',
-                          'Invalid api signer address') if Validator.is_ethereum_address?(@api_signer_address)
+                          'Invalid api signer address') unless Validator.is_ethereum_address?(@api_signer_address)
       Result.success({})
     end
 
