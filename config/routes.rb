@@ -24,8 +24,9 @@ Rails.application.routes.draw do
     match ':token_user_id' => :get, via: :GET
   end
 
-  scope 'demo/api/:ost_token_id/:url_id/users/:token_user_id/devices', controller: 'api/mobile/device', :format => false do
+  scope 'demo/api/:ost_token_id/:url_id/devices', controller: 'api/mobile/device', :format => false do
     match '' => :register, via: :POST
+    match '' => :list, via: :GET
   end
 
   match '*permalink', to: 'application#not_found', via: :all

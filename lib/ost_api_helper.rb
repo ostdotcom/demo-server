@@ -35,6 +35,13 @@ class OstApiHelper
     handle_ost_response(response)
   end
 
+  # Fetch Device list
+  #
+  def fetch_devices(params)
+    response = devices_service.get_list(params)
+    handle_ost_response(response)
+  end
+
   private
 
   # Object to call Tokens Service related endpoints
