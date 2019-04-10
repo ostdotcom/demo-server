@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
   scope 'demo/api/:ost_token_id/:url_id/users', controller: 'api/token_user', :format => false do
     match '' => :list, via: :GET
+    match 'logout' => :logout, via: :POST
   end
 
   scope 'demo/api/:ost_token_id/:url_id/users/:token_user_id/devices', controller: 'api/mobile/device', :format => false do
