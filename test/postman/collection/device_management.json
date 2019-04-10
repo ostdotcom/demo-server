@@ -1,0 +1,51 @@
+{
+	"info": {
+		"_postman_id": "c8f80207-1137-471f-819a-51bd28cf0e4a",
+		"name": "Device Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "uuid",
+							"value": "4053fbfd-6d86-4987-92e7-9bbed5cbe655",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "0x79414aad96ddbdfb7202f5b626996f8805641f98",
+							"type": "text"
+						},
+						{
+							"key": "api_signer_address",
+							"value": "0x5a7e1a6c6afcf952e918f911a5fc8e839dfa9c9f",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_ROOT_URL}}/{{TOKEN_ID}}/{{URL_ID}}/users/{{TOKEN_USER_ID}}/devices/",
+					"host": [
+						"{{API_ROOT_URL}}"
+					],
+					"path": [
+						"{{TOKEN_ID}}",
+						"{{URL_ID}}",
+						"users",
+						"{{TOKEN_USER_ID}}",
+						"devices",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

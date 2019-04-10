@@ -1,0 +1,39 @@
+{
+	"info": {
+		"_postman_id": "4f8783bd-d4ff-4913-8e24-45b0811ba3fe",
+		"name": "Notify",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user-activate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "uuid",
+							"value": "4053fbfd-6d86-4987-92e7-9bbed5cbe655",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_ROOT_URL}}/{{TOKEN_ID}}/{{URL_ID}}/notify/user-activate",
+					"host": [
+						"{{API_ROOT_URL}}"
+					],
+					"path": [
+						"{{TOKEN_ID}}",
+						"{{URL_ID}}",
+						"notify",
+						"user-activate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
