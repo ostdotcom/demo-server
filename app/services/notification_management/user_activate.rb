@@ -70,7 +70,7 @@ module NotificationManagement
     #
     def fetch_token_secure
       @token_secure = CacheManagement::TokenSecureById.new([@token_id]).fetch()[@token_id]
-      return Result.error('a_s_nm_ua_2',
+      return Result.error('a_s_nm_ua_3',
                           'INVALID_REQUEST',
                           'Invalid token') if @token_secure.blank?
       Result.success({})
@@ -80,7 +80,7 @@ module NotificationManagement
     #
     def fetch_api_endpoint
       @api_endpoint = ApiEndpoint.id_to_endpoint_map[@token[:api_endpoint_id]]
-      return Result.error('a_s_um_s_3',
+      return Result.error('a_s_um_s_4',
                           'INVALID_REQUEST',
                           'Invalid token') if @api_endpoint.blank?
       Result.success({})
@@ -95,7 +95,7 @@ module NotificationManagement
 
       response = ost_api_helper.get_user({user_id: @uuid})
       unless response[:success]
-        return Result.error('a_s_um_s_4', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_um_s_5', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       @ost_user_data = response[:data][response[:data][:result_type]]
@@ -115,7 +115,7 @@ module NotificationManagement
         token_user_obj.save! if token_user_obj.changed?
       rescue => e
         Rails.logger.error("update_token_user exception: #{e.message}")
-        return Result.error('a_s_um_s_5', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_um_s_6', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       Result.success({})

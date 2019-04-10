@@ -13,6 +13,7 @@ module ResponseEntity
           symbol: token[:symbol],
           conversion_factor: token[:conversion_factor],
           pc_token_holder_uuid: token[:pc_token_holder_uuid],
+          chain_id: token[:chain_id],
           updated_at: token[:updated_at],
           created_at: token[:created_at],
         }

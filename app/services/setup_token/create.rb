@@ -1,6 +1,6 @@
-module TokenManagement
+module SetupToken
 
-  class Create < TokenManagement::Base
+  class Create < SetupToken::Base
 
     # Create Token Constructor
     #
@@ -10,6 +10,7 @@ module TokenManagement
       @name = params[:name]
       @symbol = params[:symbol]
       @conversion_factor = params[:conversion_factor]
+      @chain_id = params[:chain_id]
 
       @url_id = params[:url_id]
       @pc_token_holder_uuid = params[:pc_token_holder_uuid]
@@ -50,6 +51,9 @@ module TokenManagement
       r = validate_token_holder_uuid
       return r unless r[:success]
 
+      r = validate_chain_id
+      return r unless r[:success]
+
       r = fetch_token_details
       return r unless r[:success]
 
@@ -83,15 +87,16 @@ module TokenManagement
                                  api_key: @api_key,
                                  encryption_salt: generate_salt_rsp[:data][:ciphertext_blob],
                                  api_secret: api_secret_e,
-                                 pc_token_holder_uuid: @pc_token_holder_uuid
+                                 pc_token_holder_uuid: @pc_token_holder_uuid,
+                                 chain_id: @chain_id
                                })
         @token_obj.save!
       rescue ActiveRecord::RecordNotUnique => e
         Rails.logger.error("create_token exception: #{e.message}")
-        return Result.error('a_s_tm_c_1', 'INVALID_REQUEST', 'Token already registered')
+        return Result.error('a_s_st_c_1', 'INVALID_REQUEST', 'Token already registered')
       rescue => e
         Rails.logger.error("create_token exception: #{e.message}")
-        return Result.error('a_s_tm_c_2', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_st_c_2', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       Result.success({})

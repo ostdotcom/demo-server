@@ -1,6 +1,6 @@
-module TokenManagement
+module SetupToken
 
-  class Update < TokenManagement::Base
+  class Update < SetupToken::Base
 
     # Update Token Constructor
     #
@@ -43,7 +43,7 @@ module TokenManagement
       @token_obj = Token.where(ost_token_id: @ost_token_id, api_endpoint_id: @api_endpoint_id).first
 
       if @token_obj.blank?
-        return Result.error('a_s_tm_u_1', 'INVALID_REQUEST',
+        return Result.error('a_s_st_u_1', 'INVALID_REQUEST',
                             'Token details not found')
       end
       Result.success({})
@@ -67,7 +67,7 @@ module TokenManagement
         @token_obj.save!
       rescue => e
         Rails.logger.error("update_token exception: #{e.message}")
-        return Result.error('a_s_tm_u_2', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_st_u_2', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       Result.success({})

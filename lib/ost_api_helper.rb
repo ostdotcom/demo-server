@@ -42,6 +42,13 @@ class OstApiHelper
     handle_ost_response(response)
   end
 
+  # Fetch Price Points
+  #
+  def fetch_price_points(params)
+    response = price_points_service.get(params)
+    handle_ost_response(response)
+  end
+
   private
 
   # Object to call Tokens Service related endpoints
@@ -60,6 +67,12 @@ class OstApiHelper
   #
   def devices_service
     @devices_service ||= @sdk_obj.services.devices
+  end
+
+  # Object to call Price Points Service related endpoints
+  #
+  def price_points_service
+    @price_points_service ||= ost_sdk.services.price_points
   end
 
   # handle OST response

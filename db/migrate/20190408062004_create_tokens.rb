@@ -11,6 +11,7 @@ class CreateTokens < ActiveRecord::Migration[5.2]
       t.column :api_secret, :text, null: false #encrypted
       t.column :encryption_salt, :blob, null: false
       t.column :pc_token_holder_uuid, :string, null: false
+      t.column :chain_id, :integer, null: false
       t.timestamps
     end
     add_index :tokens, [:url_id], unique: true, name: 'uk_1'

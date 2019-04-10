@@ -13,6 +13,7 @@ class Token < ApplicationRecord
       pc_token_holder_uuid: pc_token_holder_uuid,
       url_id: url_id,
       api_endpoint_id: api_endpoint_id,
+      chain_id: chain_id,
       updated_at: updated_at,
       created_at: created_at
     }

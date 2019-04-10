@@ -39,7 +39,7 @@ module TokenUserManagement
         token_user_obj.save!
       rescue => e
         Rails.logger.error("update_token_user exception: #{e.message}")
-        return Result.error('a_s_tum_l_1', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_tum_lo_1', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       Result.success({})

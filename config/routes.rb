@@ -14,6 +14,10 @@ Rails.application.routes.draw do
     match 'login' => :login, via: :POST
   end
 
+  scope 'demo/api/:ost_token_id/:url_id/token', controller: 'api/token', :format => false do
+    match '' => :get,  via: :GET
+  end
+
   scope 'demo/api/:ost_token_id/:url_id/notify', controller: 'api/notify', :format => false do
     match 'user-activate' => :user_activate,  via: :POST
   end
