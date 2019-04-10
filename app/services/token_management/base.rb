@@ -77,10 +77,18 @@ module TokenManagement
       Result.success({})
     end
 
+    # Validate conversion factor
+    #
+    def validate_conversion_factor
+      return Result.error('a_s_tm_b_6', 'INVALID_REQUEST',
+                          'Invalid conversion factor') unless Validator.is_numeric?(@conversion_factor)
+      Result.success({})
+    end
+
     # Validate token url id
     #
     def validate_url_id
-      return Result.error('a_s_tm_b_6', 'INVALID_REQUEST',
+      return Result.error('a_s_tm_b_7', 'INVALID_REQUEST',
                           'Invalid token url id') unless Validator.is_alphanumeric?(@url_id)
       Result.success({})
     end
@@ -88,7 +96,7 @@ module TokenManagement
     # Validate PC token holder uuid
     #
     def validate_token_holder_uuid
-       return Result.error('a_s_tm_b_7', 'INVALID_REQUEST',
+       return Result.error('a_s_tm_b_8', 'INVALID_REQUEST',
                            'Invalid token holder uuid') unless Validator.is_uuid_v4?(@pc_token_holder_uuid)
        Result.success({})
     end
@@ -96,12 +104,12 @@ module TokenManagement
     # Validate api endpoint
     #
     def validate_api_endpoint
-      return Result.error('a_s_tm_b_8', 'INVALID_REQUEST',
+      return Result.error('a_s_tm_b_9', 'INVALID_REQUEST',
                           'Invalid api endpoint') unless Validator.is_url?(@api_endpoint)
 
       @api_endpoint_id = ApiEndpoint.endpoint_to_id_map[@api_endpoint]
       if @api_endpoint_id.blank?
-        return Result.error('a_s_tm_b_9', 'INVALID_REQUEST', 'Not registered api endpoint')
+        return Result.error('a_s_tm_b_10', 'INVALID_REQUEST', 'Not registered api endpoint')
       end
 
       Result.success({})
@@ -116,7 +124,7 @@ module TokenManagement
 
       response = ost_api_helper.fetch_token_details
       unless response[:success]
-        return Result.error('a_s_tm_b_10', 'INVALID_REQUEST', 'Get token details from platform failed')
+        return Result.error('a_s_tm_b_11', 'INVALID_REQUEST', 'Get token details from platform failed')
       end
 
       @token_details_from_ost = response[:data]
@@ -130,8 +138,9 @@ module TokenManagement
     def validate_token_details
 
       token_details = @token_details_from_ost[@token_details_from_ost[:result_type]]
-      if token_details[:id] != @ost_token_id || token_details[:name] != @name || token_details[:symbol] != @symbol
-        return Result.error('a_s_tm_b_11', 'INVALID_REQUEST',
+      if token_details[:id] != @ost_token_id || token_details[:name] != @name ||
+        token_details[:symbol] != @symbol || token_details[:conversion_factor] != @conversion_factor
+        return Result.error('a_s_tm_b_12', 'INVALID_REQUEST',
                             'Token details from platform do not match with request params')
       end
 

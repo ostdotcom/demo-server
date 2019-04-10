@@ -9,6 +9,7 @@ module TokenManagement
 
       @name = params[:name]
       @symbol = params[:symbol]
+      @conversion_factor = params[:conversion_factor]
 
       @url_id = params[:url_id]
       @pc_token_holder_uuid = params[:pc_token_holder_uuid]
@@ -40,6 +41,9 @@ module TokenManagement
       r = validate_token_symbol
       return r unless r[:success]
 
+      r = validate_conversion_factor
+      return r unless r[:success]
+
       r = validate_url_id
       return r unless r[:success]
 
@@ -69,9 +73,18 @@ module TokenManagement
       api_secret_e = encrypt_rsp[:data][:ciphertext_blob]
 
       begin
-        @token_obj = Token.new({ost_token_id: @ost_token_id, api_endpoint_id: @api_endpoint_id, name: @name, symbol: @symbol,
-                           url_id: @url_id, api_key: @api_key, encryption_salt: generate_salt_rsp[:data][:ciphertext_blob],
-                           api_secret: api_secret_e, pc_token_holder_uuid: @pc_token_holder_uuid})
+        @token_obj = Token.new({
+                                 ost_token_id: @ost_token_id,
+                                 api_endpoint_id: @api_endpoint_id,
+                                 name: @name,
+                                 symbol: @symbol,
+                                 conversion_factor: @conversion_factor,
+                                 url_id: @url_id,
+                                 api_key: @api_key,
+                                 encryption_salt: generate_salt_rsp[:data][:ciphertext_blob],
+                                 api_secret: api_secret_e,
+                                 pc_token_holder_uuid: @pc_token_holder_uuid
+                               })
         @token_obj.save!
       rescue ActiveRecord::RecordNotUnique => e
         Rails.logger.error("create_token exception: #{e.message}")

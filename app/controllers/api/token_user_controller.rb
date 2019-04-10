@@ -1,5 +1,4 @@
 class Api::TokenUserController < Api::BaseController
-  skip_before_action :authenticate_user, only: [:list]
 
   # Get user detail
   #

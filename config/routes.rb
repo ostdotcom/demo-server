@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     match 'login' => :login, via: :POST
   end
 
-  scope 'demo/api/:ost_token_id/:url_id/notify', controller: 'api/mobile/notify', :format => false do
+  scope 'demo/api/:ost_token_id/:url_id/notify', controller: 'api/notify', :format => false do
     match 'user-activate' => :user_activate,  via: :POST
   end
 
@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     match ':token_user_id' => :get, via: :GET
   end
 
-  scope 'demo/api/:ost_token_id/:url_id/devices', controller: 'api/mobile/device', :format => false do
+  scope 'demo/api/:ost_token_id/:url_id/devices', controller: 'api/device', :format => false do
     match '' => :register, via: :POST
     match '' => :list, via: :GET
   end

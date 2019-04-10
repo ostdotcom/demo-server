@@ -92,7 +92,7 @@ module DeviceManagement
         return Result.error('a_s_dm_l_4', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
-      @ost_devices_data = response[:data][response[:data][:result_type]]
+      @ost_devices_data = response[:data]
 
       Result.success({})
     end
@@ -101,12 +101,13 @@ module DeviceManagement
     #
     def final_response
       formatted_devices_data = []
-      @ost_devices_data.each do |device_data|
+      @ost_devices_data[@ost_devices_data[:result_type]].each do |device_data|
         formatted_devices_data.push(ResponseEntity::Device.format(@token_user, device_data))
       end
       Result.success({
                          result_type: 'devices',
-                         devices: formatted_devices_data
+                         devices: formatted_devices_data,
+                         meta: @ost_devices_data[:meta]
                      })
     end
 

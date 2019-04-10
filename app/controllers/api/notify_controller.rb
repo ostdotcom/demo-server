@@ -1,4 +1,4 @@
-class Api::Mobile::NotifyController < Api::BaseController
+class Api::NotifyController < Api::BaseController
 
   # User activate notification
   #
