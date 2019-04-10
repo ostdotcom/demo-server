@@ -20,7 +20,7 @@ module TokenManagement
       r = validate_params
       return r unless r[:success]
 
-      create_token
+      r = create_token
       return r unless r[:success]
 
       final_response

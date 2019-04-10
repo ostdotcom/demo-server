@@ -14,7 +14,7 @@ module TokenManagement
       r = validate_params
       return r unless r[:success]
 
-      update_token
+      r = update_token
       return r unless r[:success]
 
       final_response
