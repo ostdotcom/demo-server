@@ -1,7 +1,14 @@
 class Api::TokenUserController < Api::BaseController
   skip_before_action :authenticate_user, only: [:list]
 
-  # List
+  # Get user detail
+  #
+  def get
+    response = TokenUserManagement::Get.new(params).perform()
+    render plain: Oj.dump(response, mode: :compat) and return
+  end
+
+  # Get users List
   #
   def list
     response = TokenUserManagement::List.new(params).perform()
