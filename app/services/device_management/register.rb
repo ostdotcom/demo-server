@@ -119,7 +119,7 @@ module DeviceManagement
     def final_response
       Result.success({
                        result_type: 'device',
-                       current_user: ResponseEntity::Device.format(@token_user, @ost_device_data)
+                       device: ResponseEntity::Device.format(@token_user, @ost_device_data)
                      })
     end
 
