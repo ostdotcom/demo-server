@@ -9,20 +9,20 @@ Rails.application.routes.draw do
     match 'update-token' => :update, via: :POST
   end
 
-  scope 'demo/api/:url_id/:ost_token_id', controller: 'api/authentication', :format => false do
+  scope 'demo/api/:ost_token_id/:url_id', controller: 'api/authentication', :format => false do
     match 'signup' => :signup,  via: :POST
     match 'login' => :login, via: :POST
   end
 
-  scope 'demo/api/:url_id/:ost_token_id/notify', controller: 'api/mobile/notify', :format => false do
+  scope 'demo/api/:ost_token_id/:url_id/notify', controller: 'api/mobile/notify', :format => false do
     match 'user-activate' => :user_activate,  via: :POST
   end
 
-  scope 'demo/api/:url_id/:ost_token_id/users', controller: 'api/token_user', :format => false do
+  scope 'demo/api/:ost_token_id/:url_id/users', controller: 'api/token_user', :format => false do
     match '' => :list, via: :GET
   end
 
-  scope 'demo/api/:url_id/:ost_token_id/users/:token_user_id/devices', controller: 'api/mobile/device', :format => false do
+  scope 'demo/api/:ost_token_id/:url_id/users/:token_user_id/devices', controller: 'api/mobile/device', :format => false do
     match '' => :register, via: :POST
   end
 
