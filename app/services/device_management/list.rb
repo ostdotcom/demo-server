@@ -48,7 +48,7 @@ module DeviceManagement
     # validate pagination identifier
     #
     def validate_pagination_identifier
-      if @pagination_identifier.blank? || Validator.is_alphanumeric?(@pagination_identifier)
+      if @pagination_identifier.blank? || Validator.is_alphanumeric_equal?(@pagination_identifier)
         Result.success({})
       else
         Result.error('a_s_dm_l_1', 'INVALID_REQUEST', 'Invalid pagination_identifier')

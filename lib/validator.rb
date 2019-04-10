@@ -26,6 +26,12 @@ class Validator
       object =~ /\A[A-Z0-9\s]+\z/i
     end
 
+    # Is alpha number equal to
+    #
+    def is_alphanumeric_equal?(object)
+      object =~ /\A[A-Z0-9=]+\z/i
+    end
+
     # Is alpha space
     #
     def is_alpha_space?(object)
