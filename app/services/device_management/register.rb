@@ -9,7 +9,6 @@ module DeviceManagement
       @token_id = @token[:id]
       @token_user = params[:token_user]
 
-      @uuid = params[:uuid]
       @address = params[:address]
       @api_signer_address = params[:api_signer_address]
 
@@ -41,8 +40,6 @@ module DeviceManagement
     # validate params
     #
     def validate_params
-      r = validate_uuid
-      return r unless r[:success]
 
       r = validate_address
       return r unless r[:success]
@@ -50,14 +47,6 @@ module DeviceManagement
       r = validate_api_signer_address
       return r unless r[:success]
 
-      Result.success({})
-    end
-
-    # Validate uuid
-    #
-    def validate_uuid
-      return Result.error('a_s_dm_r_1', 'INVALID_REQUEST',
-                          'Invalid uuid') if @token_user[:uuid] != @uuid || !Validator.is_uuid_v4?(@uuid)
       Result.success({})
     end
 
@@ -104,7 +93,7 @@ module DeviceManagement
       ost_api_helper = OstApiHelper.new({api_key: @token_secure[:api_key],
                                          api_secret: @token_secure[:api_secret], api_endpoint: @api_endpoint})
 
-      response = ost_api_helper.register_device({user_id: @uuid, address: @address, api_signer_address: @api_signer_address})
+      response = ost_api_helper.register_device({user_id: @token_user[:uuid], address: @address, api_signer_address: @api_signer_address})
       unless response[:success]
         return Result.error('a_s_dm_r_6', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end

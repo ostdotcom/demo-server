@@ -8,7 +8,6 @@ module NotificationManagement
       @token = params[:token]
       @token_id = @token[:id]
       @token_user = params[:token_user]
-      @uuid = params[:uuid]
 
       @token_secure = nil
       @api_endpoint = nil
@@ -41,8 +40,6 @@ module NotificationManagement
     # validate params
     #
     def validate_params
-      r = validate_uuid
-      return r unless r[:success]
 
       r = validate_user_status
       return r unless r[:success]
@@ -50,13 +47,6 @@ module NotificationManagement
       Result.success({})
     end
 
-    # Validate uuid
-    #
-    def validate_uuid
-      return Result.error('a_s_nm_ua_1', 'INVALID_REQUEST',
-                          'Invalid uuid') if @token_user[:uuid] != @uuid || !Validator.is_uuid_v4?(@uuid)
-      Result.success({})
-    end
 
     # Validate user status
     #
@@ -93,7 +83,7 @@ module NotificationManagement
       ost_api_helper = OstApiHelper.new({api_key: @token_secure[:api_key],
                                          api_secret: @token_secure[:api_secret], api_endpoint: @api_endpoint})
 
-      response = ost_api_helper.get_user({user_id: @uuid})
+      response = ost_api_helper.get_user({user_id: @token_user[:uuid]})
       unless response[:success]
         return Result.error('a_s_um_s_5', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
