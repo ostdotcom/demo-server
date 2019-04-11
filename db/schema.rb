@@ -44,11 +44,13 @@ ActiveRecord::Schema.define(version: 2019_04_08_084642) do
     t.integer "api_endpoint_id", null: false
     t.string "name", null: false
     t.string "symbol", null: false
+    t.decimal "conversion_factor", precision: 15, scale: 6, null: false
     t.string "url_id", null: false
     t.text "api_key", null: false
     t.text "api_secret", null: false
     t.binary "encryption_salt", null: false
     t.string "pc_token_holder_uuid", null: false
+    t.integer "chain_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ost_token_id", "api_endpoint_id"], name: "uk_2", unique: true
