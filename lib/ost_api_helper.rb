@@ -72,7 +72,7 @@ class OstApiHelper
   # Object to call Price Points Service related endpoints
   #
   def price_points_service
-    @price_points_service ||= ost_sdk.services.price_points
+    @price_points_service ||= @sdk_obj.services.price_points
   end
 
   # handle OST response
