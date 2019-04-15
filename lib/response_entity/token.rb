@@ -5,17 +5,21 @@ module ResponseEntity
 
     class << self
 
-      def format(token)
+      def format(token_data_from_db, token_data_from_ost)
         {
-          id: token[:id],
-          ost_token_id: token[:ost_token_id],
-          name: token[:name],
-          symbol: token[:symbol],
-          conversion_factor: token[:conversion_factor],
-          pc_token_holder_uuid: token[:pc_token_holder_uuid],
-          chain_id: token[:chain_id],
-          updated_at: token[:updated_at],
-          created_at: token[:created_at],
+          id: token_data_from_db[:id],
+          name: token_data_from_db[:name],
+          symbol: token_data_from_db[:symbol],
+          conversion_factor: token_data_from_db[:conversion_factor],
+          pc_token_holder_uuid: token_data_from_db[:pc_token_holder_uuid],
+          chain_id: token_data_from_db[:chain_id],
+          updated_at: token_data_from_db[:updated_at],
+          created_at: token_data_from_db[:created_at],
+          ost_token_id: token_data_from_ost[:id],
+          decimals: token_data_from_ost[:decimals],
+          total_supply: token_data_from_ost[:total_supply],
+          utility_branded_token_address: token_data_from_ost[:auxiliary_chains].first[:utility_branded_token],
+          value_branded_token_address: token_data_from_ost[:origin_chain][:branded_token]
         }
       end
 

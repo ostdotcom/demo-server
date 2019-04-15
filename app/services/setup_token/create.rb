@@ -11,7 +11,6 @@ module SetupToken
       @symbol = params[:symbol]
       @conversion_factor = params[:conversion_factor]
       @chain_id = params[:chain_id]
-
       @url_id = params[:url_id]
       @pc_token_holder_uuid = params[:pc_token_holder_uuid]
     end

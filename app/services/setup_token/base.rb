@@ -141,7 +141,7 @@ module SetupToken
         return Result.error('a_s_st_b_12', 'INVALID_REQUEST', 'Get token details from platform failed')
       end
 
-      @token_details_from_ost = response[:data]
+      @token_details_from_ost = response[:data][response[:data][:result_type]]
 
       Result.success({})
 
@@ -151,10 +151,9 @@ module SetupToken
     #
     def validate_token_details
 
-      token_details = @token_details_from_ost[@token_details_from_ost[:result_type]]
-      if token_details[:id] != @ost_token_id || token_details[:name] != @name ||
-        token_details[:symbol] != @symbol || token_details[:conversion_factor] != @conversion_factor ||
-        token_details[:auxiliary_chains][0][:chain_id] != @chain_id
+      if @token_details_from_ost[:id] != @ost_token_id || @token_details_from_ost[:name] != @name ||
+        @token_details_from_ost[:symbol] != @symbol || @token_details_from_ost[:conversion_factor] != @conversion_factor ||
+        @token_details_from_ost[:auxiliary_chains][0][:chain_id] != @chain_id
         return Result.error('a_s_st_b_13', 'INVALID_REQUEST',
                             'Token details from platform do not match with request params')
       end
@@ -165,8 +164,8 @@ module SetupToken
     # Final response
     #
     def final_response
-      token = CacheManagement::TokenById.new([@token_obj.id]).fetch()[@token_obj.id]
-      Result.success({result_type: 'token', token: ResponseEntity::Token.format(token)})
+      Result.success({result_type: 'token',
+        token: ResponseEntity::Token.format(@token_obj.formated_cache_data, @token_details_from_ost)})
     end
 
   end

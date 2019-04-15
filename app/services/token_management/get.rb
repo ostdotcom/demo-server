@@ -11,7 +11,9 @@ module TokenManagement
 
       @token_secure = nil
       @api_endpoint = nil
+      @ost_api_helper = nil
       @ost_price_point_data = nil
+      @ost_token_details = nil
     end
 
     # Perform action
@@ -26,10 +28,17 @@ module TokenManagement
       r = fetch_api_endpoint
       return r unless r[:success]
 
+      r = set_ost_api_helper
+      return r unless r[:success]
+
       r = fetch_price_points_from_ost
       return r unless r[:success]
 
+      r = fetch_token_details_from_ost
+      return r unless r[:success]
+
       final_response
+
     end
 
     private
@@ -60,20 +69,33 @@ module TokenManagement
       Result.success({})
     end
 
+    # Set OST API Helper Object
+    #
+    def set_ost_api_helper
+      @ost_api_helper = OstApiHelper.new({api_key: @token_secure[:api_key],
+                                          api_secret: @token_secure[:api_secret], api_endpoint: @api_endpoint})
+      Result.success({})
+    end
+
     # Fetch price points from OST
     #
     def fetch_price_points_from_ost
-
-      ost_api_helper = OstApiHelper.new({api_key: @token_secure[:api_key],
-                                         api_secret: @token_secure[:api_secret], api_endpoint: @api_endpoint})
-
-      response = ost_api_helper.fetch_price_points({chain_id: @chain_id})
+      response = @ost_api_helper.fetch_price_points({chain_id: @chain_id})
       unless response[:success]
         return Result.error('a_s_tm_g_3', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
-
       @ost_price_point_data = response[:data][response[:data][:result_type]]
+      Result.success({})
+    end
 
+    # Fetch token details from OST
+    #
+    def fetch_token_details_from_ost
+      response = @ost_api_helper.fetch_token_details
+      unless response[:success]
+        return Result.error('a_s_tm_g_4', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+      end
+      @ost_token_details = response[:data][response[:data][:result_type]]
       Result.success({})
     end
 
@@ -82,7 +104,7 @@ module TokenManagement
     def final_response
       Result.success({
                        result_type: 'token',
-                       token: ResponseEntity::Token.format(@token),
+                       token: ResponseEntity::Token.format(@token, @ost_token_details),
                        price_point: @ost_price_point_data
                      })
     end
