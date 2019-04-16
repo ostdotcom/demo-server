@@ -59,7 +59,8 @@ class OstApiHelper
   # Initiate Company To User Transaction
   #
   def initiate_direct_transfer(params)
-    transactions_service.execute(params)
+    response = transactions_service.execute(params)
+    handle_ost_response(response)
   end
 
   # Fetch User Balance
