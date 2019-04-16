@@ -32,6 +32,10 @@ module GlobalConstant
         BigDecimal.new('1000000000000000000')
       end
 
+      def rule_name_to_use_for_grant
+        'Direct Transfer'
+      end
+
     end
 
   end
