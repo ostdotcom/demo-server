@@ -56,9 +56,9 @@ class OstApiHelper
     handle_ost_response(response)
   end
 
-  # Initiate Company To User Transaction
+  # Initiate Fund Transfer
   #
-  def initiate_direct_transfer(params)
+  def initiate_fund_transfer(params)
     response = transactions_service.execute(params)
     handle_ost_response(response)
   end

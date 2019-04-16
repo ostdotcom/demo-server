@@ -233,7 +233,7 @@ module NotificationManagement
       }
       execute_params[:meta_property] = meta_property
 
-      response = @ost_api_helper.initiate_direct_transfer(execute_params)
+      response = @ost_api_helper.initiate_fund_transfer(execute_params)
       unless response[:success]
         return Result.error('a_s_um_s_12', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
