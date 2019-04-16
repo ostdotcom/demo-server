@@ -21,9 +21,9 @@ class OstApiHelper
     handle_ost_response(response)
   end
 
-  # Get User
+  # Get User Details
   #
-  def get_user(params)
+  def fetch_user_details(params)
     response = users_service.get(params)
     handle_ost_response(response)
   end
@@ -46,6 +46,26 @@ class OstApiHelper
   #
   def fetch_price_points(params)
     response = price_points_service.get(params)
+    handle_ost_response(response)
+  end
+
+  # Fetch rules data
+  #
+  def fetch_rules
+    response = rules_service.get_list({})
+    handle_ost_response(response)
+  end
+
+  # Initiate Company To User Transaction
+  #
+  def initiate_direct_transfer(params)
+    transactions_service.execute(params)
+  end
+
+  # Fetch User Balance
+  #
+  def fetch_user_balance(params)
+    response = balances_service.get(params)
     handle_ost_response(response)
   end
 
@@ -73,6 +93,24 @@ class OstApiHelper
   #
   def price_points_service
     @price_points_service ||= @sdk_obj.services.price_points
+  end
+
+  # Object to call Rules Service related endpoints
+  #
+  def rules_service
+    @rules_service ||= @sdk_obj.services.rules
+  end
+
+  # Object to call Transactions Service related endpoints
+  #
+  def transactions_service
+    @transactions_service ||= @sdk_obj.services.transactions
+  end
+
+  # Object to call Balance Service related endpoints
+  #
+  def balances_service
+    @balances_service ||= @sdk_obj.services.balance
   end
 
   # handle OST response

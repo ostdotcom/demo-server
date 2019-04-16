@@ -9,6 +9,7 @@ module SetupToken
       @api_key = params[:api_key]
       @api_secret = params[:api_secret]
       @api_endpoint = params[:api_endpoint]
+
       @api_endpoint_id = nil
       @token_obj = nil
       @token_details_from_ost = nil

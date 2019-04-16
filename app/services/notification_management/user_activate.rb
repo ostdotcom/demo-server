@@ -11,7 +11,10 @@ module NotificationManagement
 
       @token_secure = nil
       @api_endpoint = nil
-      @ost_user_data = nil
+      @user_data_from_ost = nil
+      @rule_address_from_ost = nil
+      @bt_grant_amount_in_wei = nil
+      @ost_api_helper = nil
     end
 
     # Perform action
@@ -26,13 +29,20 @@ module NotificationManagement
       r = fetch_api_endpoint
       return r unless r[:success]
 
+      r = set_ost_api_helper
+      return r unless r[:success]
+
       r = fetch_user_from_ost
       return r unless r[:success]
 
       r = update_token_user
       return r unless r[:success]
 
+      r = check_eligibility_and_grant
+      return r unless r[:success]
+
       final_response
+
     end
 
     private
@@ -76,19 +86,23 @@ module NotificationManagement
       Result.success({})
     end
 
+    # Set OST API Helper Object
+    #
+    def set_ost_api_helper
+      @ost_api_helper = OstApiHelper.new({api_key: @token_secure[:api_key],
+                                          api_secret: @token_secure[:api_secret], api_endpoint: @api_endpoint})
+      Result.success({})
+    end
+
     # Fetch users from OST
     #
     def fetch_user_from_ost
-
-      ost_api_helper = OstApiHelper.new({api_key: @token_secure[:api_key],
-                                         api_secret: @token_secure[:api_secret], api_endpoint: @api_endpoint})
-
-      response = ost_api_helper.get_user({user_id: @token_user[:uuid]})
+      response = @ost_api_helper.fetch_user_details({user_id: @token_user[:uuid]})
       unless response[:success]
         return Result.error('a_s_um_s_5', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
-      @ost_user_data = response[:data][response[:data][:result_type]]
+      @user_data_from_ost = response[:data][response[:data][:result_type]]
 
       Result.success({})
     end
@@ -98,10 +112,10 @@ module NotificationManagement
     def update_token_user
       begin
         token_user_obj = ::TokenUser.where(id: @token_user[:id]).first
-        token_user_obj.token_holder_address = @ost_user_data[:token_holder_address]
-        token_user_obj.device_manager_address = @ost_user_data[:token_holder_address]
-        token_user_obj.recovery_address = @ost_user_data[:recovery_address]
-        token_user_obj.ost_user_status = @ost_user_data[:status]
+        token_user_obj.token_holder_address = @user_data_from_ost[:token_holder_address]
+        token_user_obj.device_manager_address = @user_data_from_ost[:device_manager_address]
+        token_user_obj.recovery_address = @user_data_from_ost[:recovery_address]
+        token_user_obj.ost_user_status = @user_data_from_ost[:status]
         token_user_obj.save! if token_user_obj.changed?
       rescue => e
         Rails.logger.error("update_token_user exception: #{e.message}")
@@ -111,14 +125,131 @@ module NotificationManagement
       Result.success({})
     end
 
+    # Fund this token user (if eligible) with BT
+    #
+    def check_eligibility_and_grant
+
+      # If token holder address is missing return
+      return Result.success({}) if @user_data_from_ost[:token_holder_address].blank?
+
+      # if user isn't eligible. return success
+      r = check_user_eligibility
+      return Result.success({}) unless r[:success]
+
+      r = determine_grant_amount
+      return r unless r[:success]
+
+      r = fetch_rule_address_from_ost
+      return r unless r[:success]
+
+      r = submit_grant_request_to_ost
+      return r unless r[:success]
+
+      Result.success({})
+
+    end
+
+    # Check if this token user lies in the eligibility criteria
+    #
+    def check_user_eligibility
+      count = TokenUser.where(token_id: @token_id, ost_user_status: GlobalConstant::Grant.eligible_ost_user_status).count
+      if count > GlobalConstant::Grant.count_of_users_eligible
+        return Result.error('a_s_um_s_7', 'INVALID_REQUEST', 'Grant user limit breached')
+      end
+      Result.success({})
+    end
+
+    # depending on company reserve balance & other set restrictions, determine the amount to be granted
+    #
+    def determine_grant_amount
+
+      response = @ost_api_helper.fetch_user_balance({user_id: @token[:pc_token_holder_uuid]})
+      unless response[:success]
+        return Result.error('a_s_um_s_8', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+      end
+
+      available_reserve_balance = BigDecimal.new(response[:data][response[:data][:result_type]][:available_balance])
+
+      amount_for_grants = available_reserve_balance * GlobalConstant::Grant.percent_of_balance_to_be_used_for_grant / 100
+      grant_amount = amount_for_grants / GlobalConstant::Grant.count_of_users_eligible
+
+      if grant_amount < GlobalConstant::Grant.min_bt_wei_grant_amount
+        return Result.error('a_s_um_s_9', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+      end
+
+      if grant_amount > GlobalConstant::Grant.max_bt_wei_grant_amount
+        grant_amount = GlobalConstant::Grant.max_bt_wei_grant_amount
+      end
+
+      @bt_grant_amount_in_wei = grant_amount
+
+      Result.success({})
+
+    end
+    
+    # Fetch Rule Address from OST
+    # 
+    def fetch_rule_address_from_ost
+
+      response = @ost_api_helper.fetch_rules
+      unless response[:success]
+        return Result.error('a_s_um_s_10', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+      end
+
+      rules_data = response[:data][response[:data][:result_type]]
+      rules_data.each do |rule_data|
+        if rule_data[:name] == 'Direct Transfer'
+          @rule_address_from_ost = rule_data[:address]
+          break
+        end
+      end
+
+      if @rule_address_from_ost.blank?
+        return Result.error('a_s_um_s_11', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+      end
+
+      Result.success({})
+
+    end
+
+    # Submit Grant Request to OST
+    #
+    def submit_grant_request_to_ost
+      execute_params = {
+        user_id: @token[:pc_token_holder_uuid],
+        to: @rule_address_from_ost
+      }
+      raw_calldata = {
+        method: 'directTransfers',
+        parameters: [
+          [@user_data_from_ost[:token_holder_address]],
+          [@bt_grant_amount_in_wei.truncate.to_s]
+        ]
+      }
+      execute_params[:raw_calldata] = raw_calldata.to_json
+      meta_property = {
+        name: "Welcome Grant" ,
+        type: "company_to_user"
+      }
+      execute_params[:meta_property] = meta_property
+
+      response = @ost_api_helper.initiate_direct_transfer(execute_params)
+      unless response[:success]
+        return Result.error('a_s_um_s_12', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+      end
+
+      Result.success({})
+
+    end
+
     # Final response
     #
     def final_response
       updated_token_user_secure = CacheManagement::TokenUserSecure.new([@token_user[:id]]).fetch()[@token_user[:id]]
       updated_token_user = CacheManagement::TokenUser.new([@token_user[:id]]).fetch()[@token_user[:id]]
       Result.success({
-                       result_type: 'current_user',
-                       current_user: ResponseEntity::CurrentTokenUser.format(updated_token_user, updated_token_user_secure)
+                         result_type: 'current_user',
+                         current_user: ResponseEntity::CurrentTokenUser.format(updated_token_user, updated_token_user_secure)
                      })
     end
 
