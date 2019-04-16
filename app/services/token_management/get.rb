@@ -31,11 +31,16 @@ module TokenManagement
       r = set_ost_api_helper
       return r unless r[:success]
 
-      r = fetch_price_points_from_ost
-      return r unless r[:success]
+      # Fetch Price Points & Token Details from OST in parallel threads
+      tasks = []
+      tasks.push(fetch_price_points_from_ost)
+      tasks.push(fetch_token_details_from_ost)
 
-      r = fetch_token_details_from_ost
-      return r unless r[:success]
+      tasks.each { |thread| thread.join } # wait for the slowest one to complete
+
+      tasks.each do |task|
+        return r unless task.value[:success]
+      end
 
       final_response
 
@@ -80,23 +85,29 @@ module TokenManagement
     # Fetch price points from OST
     #
     def fetch_price_points_from_ost
-      response = @ost_api_helper.fetch_price_points({chain_id: @chain_id})
-      unless response[:success]
-        return Result.error('a_s_tm_g_3', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
-      end
-      @ost_price_point_data = response[:data][response[:data][:result_type]]
-      Result.success({})
+      Thread.new {
+        response = @ost_api_helper.fetch_price_points({chain_id: @chain_id})
+        if response[:success]
+          @ost_price_point_data = response[:data][response[:data][:result_type]]
+          Thread.current[:output] = Result.success({})
+        else
+          Thread.current[:output] = Result.error('a_s_tm_g_3', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        end
+      }
     end
 
     # Fetch token details from OST
     #
     def fetch_token_details_from_ost
-      response = @ost_api_helper.fetch_token_details
-      unless response[:success]
-        return Result.error('a_s_tm_g_4', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
-      end
-      @ost_token_details = response[:data][response[:data][:result_type]]
-      Result.success({})
+      Thread.new {
+        response = @ost_api_helper.fetch_token_details
+        if response[:success]
+          @ost_token_details = response[:data][response[:data][:result_type]]
+          Thread.current[:output] = Result.success({})
+        else
+          Thread.current[:output] = Result.error('a_s_tm_g_4', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        end
+      }
     end
 
     # Final response
