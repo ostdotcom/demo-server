@@ -1,7 +1,6 @@
 class CreateTokenUsers < ActiveRecord::Migration[5.2]
   def change
     create_table :token_users do |t|
-      t.column :fullname, :string, null: false
       t.column :username, :string, null: false
       t.column :password, :text, null: false #encrypted
       t.column :user_pin_salt, :text, null: false #encrypted
@@ -17,6 +16,5 @@ class CreateTokenUsers < ActiveRecord::Migration[5.2]
       t.timestamps
     end
     add_index :token_users, [:token_id, :username], unique: true, name: 'uk_1'
-    add_index :token_users, [:token_id, :fullname], unique: false, name: 'token_id_fullname'
   end
 end

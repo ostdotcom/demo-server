@@ -22,11 +22,6 @@
 							"key": "password",
 							"value": "12345678",
 							"type": "text"
-						},
-						{
-							"key": "fullname",
-							"value": "Test User",
-							"type": "text"
 						}
 					]
 				},

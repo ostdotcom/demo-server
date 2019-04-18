@@ -34,26 +34,20 @@ module AuthenticationManagement
     # Validate Username
     #
     def validate_username
-      return Result.error('a_s_am_b_1', 'INVALID_REQUEST',
-                          'Invalid username') unless Validator.is_alphanumeric?(@username)
-
+      if @username.blank? || @username.length > 25 || !Validator.is_alphanumeric?(@username)
+        return Result.error('a_s_am_b_1', 'INVALID_REQUEST',
+                            'Invalid username')
+      end
       Result.success({})
     end
 
     # Validate Password
     #
     def validate_password
-      return Result.error('a_s_tm_b_2', 'INVALID_REQUEST',
-                          'Invalid password') unless @password.present?
-
-      Result.success({})
-    end
-
-    # Validate Fullname
-    #
-    def validate_fullname
-      return Result.error('a_s_am_b_3', 'INVALID_REQUEST',
-                          'Invalid username') unless Validator.is_alpha_space?(@fullname)
+      if @password.blank? || @password.length > 25 || !Validator.is_alphanumeric?(@password)
+        return Result.error('a_s_tm_b_2', 'INVALID_REQUEST',
+                            'Invalid password')
+      end
 
       Result.success({})
     end

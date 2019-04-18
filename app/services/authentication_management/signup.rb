@@ -2,12 +2,10 @@ module AuthenticationManagement
 
   class Signup < AuthenticationManagement::Base
 
-    # Login Constructor
+    # Signup Constructor
     #
     def initialize(params)
       super(params)
-
-      @fullname = params[:fullname]
 
       @token_secure = nil
       @api_endpoint = nil
@@ -44,9 +42,6 @@ module AuthenticationManagement
     #
     def validate_params
       r = super
-      return r unless r[:success]
-
-      r = validate_fullname
       return r unless r[:success]
 
       r = validate_existing_user
@@ -123,7 +118,6 @@ module AuthenticationManagement
 
       begin
         @token_user_obj = TokenUser.new({
-                                          fullname: @fullname,
                                           username: @username,
                                           password: password_e,
                                           user_pin_salt: user_pin_salt_e,

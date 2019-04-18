@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   scope 'demo/api/:ost_token_id/:url_id/users', controller: 'api/token_user', :format => false do
     match '' => :list, via: :GET
     match 'logout' => :logout, via: :POST
-    match ':token_user_id' => :get, via: :GET
+    match ':app_user_id' => :get, via: :GET
   end
 
   scope 'demo/api/:ost_token_id/:url_id/devices', controller: 'api/device', :format => false do

@@ -6,7 +6,7 @@ module TokenUserManagement
     #
     def initialize(params)
       @token = params[:token]
-      @token_user_id = params[:token_user_id]
+      @app_user_id = params[:app_user_id]
 
       @token_user = nil
     end
@@ -37,8 +37,8 @@ module TokenUserManagement
     # validate token user id
     #
     def validate_token_user_id
-      return Result.error('a_s_tum_g_1', 'INVALID_REQUEST', 'Invalid token user id') unless Validator.is_numeric?(@token_user_id)
-      @token_user_id = @token_user_id.to_i
+      return Result.error('a_s_tum_g_1', 'INVALID_REQUEST', 'Invalid token user id') unless Validator.is_numeric?(@app_user_id)
+      @app_user_id = @app_user_id.to_i
       Result.success({})
     end
 
@@ -46,7 +46,7 @@ module TokenUserManagement
     #
     def get_user_detail
 
-      @token_user = CacheManagement::TokenUser.new([@token_user_id]).fetch()[@token_user_id]
+      @token_user = CacheManagement::TokenUser.new([@app_user_id]).fetch()[@app_user_id]
 
       if @token_user.blank? || @token_user[:token_id] != @token[:id]
         return Result.error('a_s_tum_g_2', 'INVALID_REQUEST', 'Invalid token user id')

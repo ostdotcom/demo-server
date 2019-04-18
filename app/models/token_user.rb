@@ -40,7 +40,7 @@ class TokenUser < ApplicationRecord
   def formated_cache_data
     {
       id: id,
-      fullname: fullname,
+      username: username,
       token_id: token_id,
       ost_token_id: ost_token_id,
       uuid: uuid,
