@@ -1,8 +1,8 @@
 module TokenUserManagement
 
-  class Get
+  class GetByAppUserId
 
-    # Get Token User Detail Constructor
+    # Get User Detail by app user id Constructor
     #
     def initialize(params)
       @token = params[:token]

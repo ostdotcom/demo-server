@@ -1,9 +1,16 @@
 class Api::TokenUserController < Api::BaseController
 
-  # Get user detail
+  # Get user detail by app_user_id
   #
   def get
-    response = TokenUserManagement::Get.new(params).perform()
+    response = TokenUserManagement::GetByAppUserId.new(params).perform()
+    render plain: Oj.dump(response, mode: :compat) and return
+  end
+
+  # Get user detail of logged in user
+  #
+  def logged_in_user
+    response = TokenUserManagement::GetLoggedInUser.new(params).perform()
     render plain: Oj.dump(response, mode: :compat) and return
   end
 
