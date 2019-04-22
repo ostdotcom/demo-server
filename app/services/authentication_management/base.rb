@@ -22,34 +22,21 @@ module AuthenticationManagement
     # validate params
     #
     def validate_params
-      r = validate_username
-      return r unless r[:success]
-
-      r = validate_password
-      return r unless r[:success]
-
-      Result.success({})
-    end
-
-    # Validate Username
-    #
-    def validate_username
+      param_validation_errors = []
       if @username.blank? || @username.length > 25 || !Validator.is_alphanumeric?(@username)
-        return Result.error('a_s_am_b_1', 'INVALID_REQUEST',
-                            'Invalid username')
+        param_validation_errors.push({
+                                         parameter: 'username',
+                                         msg: 'Invalid username'
+                                     })
       end
-      Result.success({})
-    end
-
-    # Validate Password
-    #
-    def validate_password
       if @password.blank? || @password.length > 25 || !Validator.is_alphanumeric?(@password)
-        return Result.error('a_s_tm_b_2', 'INVALID_REQUEST',
-                            'Invalid password')
+        param_validation_errors.push({
+                                         parameter: 'password',
+                                         msg: 'Invalid password'
+                                     })
       end
-
-      Result.success({})
+      param_validation_errors.any? ? Result.param_validation_error('a_s_am_b_1', param_validation_errors) :
+          Result.success({})
     end
 
     # Fetch token user
