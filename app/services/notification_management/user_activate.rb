@@ -154,7 +154,7 @@ module NotificationManagement
     # Check if this token user lies in the eligibility criteria
     #
     def check_user_eligibility
-      count = TokenUser.where(token_id: @token_id, ost_user_status: GlobalConstant::Grant.eligible_ost_user_status).count
+      count = TokenUser.where(token_id: @token_id, ost_user_status: GlobalConstant::User.activated_ost_user_status).count
       if count > GlobalConstant::Grant.count_of_users_eligible
         return Result.error('a_s_um_s_8', 'INVALID_REQUEST', 'Grant user limit breached')
       end

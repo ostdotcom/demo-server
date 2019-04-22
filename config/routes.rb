@@ -24,9 +24,14 @@ Rails.application.routes.draw do
 
   scope 'demo/api/:ost_token_id/:url_id/users', controller: 'api/token_user', :format => false do
     match 'logout' => :logout, via: :POST
+    match 'current-user' => :logged_in_user_detail, via: :GET
+    match 'ledger' => :logged_in_user_ledger, via: :GET
     match '' => :list, via: :GET
-    match 'logged-in' => :logged_in_user, via: :GET
-    match ':app_user_id' => :get, via: :GET
+  end
+
+  scope 'demo/api/:ost_token_id/:url_id/users/:app_user_id', controller: 'api/token_user', :format => false do
+    match 'detail' => :get_detail, via: :GET
+    match 'balance' => :get_balance, via: :GET
   end
 
   scope 'demo/api/:ost_token_id/:url_id/devices', controller: 'api/device', :format => false do

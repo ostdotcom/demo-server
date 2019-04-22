@@ -1,16 +1,10 @@
 class Api::TokenUserController < Api::BaseController
 
-  # Get user detail by app_user_id
+  # Logout
   #
-  def get
-    response = TokenUserManagement::GetByAppUserId.new(params).perform()
-    render plain: Oj.dump(response, mode: :compat) and return
-  end
-
-  # Get user detail of logged in user
-  #
-  def logged_in_user
-    response = TokenUserManagement::GetLoggedInUser.new(params).perform()
+  def logout
+    response = TokenUserManagement::Logout.new(params).perform()
+    delete_cookie(GlobalConstant::Cookie.user_authentication_cookie) if response[:success]
     render plain: Oj.dump(response, mode: :compat) and return
   end
 
@@ -21,11 +15,31 @@ class Api::TokenUserController < Api::BaseController
     render plain: Oj.dump(response, mode: :compat) and return
   end
 
-  # Logout
+  # Get user detail of logged in user
   #
-  def logout
-    response = TokenUserManagement::Logout.new(params).perform()
-    delete_cookie(GlobalConstant::Cookie.user_authentication_cookie) if response[:success]
+  def logged_in_user_detail
+    response = TokenUserManagement::ForLoggedInUser::GetDetail.new(params).perform()
+    render plain: Oj.dump(response, mode: :compat) and return
+  end
+
+  # Get user transactions ledger of logged in user
+  #
+  def logged_in_user_ledger
+    response = TokenUserManagement::ForLoggedInUser::GetLedger.new(params).perform()
+    render plain: Oj.dump(response, mode: :compat) and return
+  end
+
+  # Get user detail by app_user_id
+  #
+  def get_detail
+    response = TokenUserManagement::ByAppUserId::GetDetail.new(params).perform()
+    render plain: Oj.dump(response, mode: :compat) and return
+  end
+
+  # Get user balance by app_user_id
+  #
+  def get_balance
+    response = TokenUserManagement::ByAppUserId::GetBalance.new(params).perform()
     render plain: Oj.dump(response, mode: :compat) and return
   end
 

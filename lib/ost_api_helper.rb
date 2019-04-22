@@ -70,6 +70,13 @@ class OstApiHelper
     handle_ost_response(response)
   end
 
+  # Fetch User Transaction Ledger
+  #
+  def fetch_user_transaction_ledger(params)
+    response = transactions_service.get_list(params)
+    handle_ost_response(response)
+  end
+
   private
 
   # Object to call Tokens Service related endpoints
@@ -118,6 +125,7 @@ class OstApiHelper
   #
   def handle_ost_response(response)
     unless response['success']
+      Rails.logger.error("Error in API Call To OST: #{response}")
       return Result.error('l_oah_1', 'INTERNAL_SERVER_ERROR', 'Request to OST failed')
     end
     Result.success(HashWithIndifferentAccess.new(response['data']))
