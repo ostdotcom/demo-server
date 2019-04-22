@@ -10,16 +10,7 @@
 			"request": {
 				"method": "POST",
 				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "uuid",
-							"value": "4053fbfd-6d86-4987-92e7-9bbed5cbe655",
-							"type": "text"
-						}
-					]
-				},
+				"body": {},
 				"url": {
 					"raw": "{{API_ROOT_URL}}/{{TOKEN_ID}}/{{URL_ID}}/notify/user-activate",
 					"host": [
