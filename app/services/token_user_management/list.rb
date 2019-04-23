@@ -146,7 +146,7 @@ module TokenUserManagement
         response = @ost_api_helper.fetch_user_balance({user_id: token_user[:uuid]})
         if response[:success]
           balance_data = response[:data][response[:data][:result_type]]
-          @balances[token_user[:id]] = ResponseEntity::TokenUserBalance.format(balance_data)
+          @balances[token_user[:id]] = ResponseEntity::TokenUserBalance.format(token_user, balance_data)
         else
           @balance_fetch_errors[token_user[:uuid]] = response
           Rails.logger.error("fetch_balance_from_ost error for #{token_user[:uuid]} response : #{response}")

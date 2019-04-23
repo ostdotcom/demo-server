@@ -56,7 +56,8 @@ module TokenUserManagement
       # final response
       #
       def final_response
-        Result.success({result_type: 'balance', balance: ResponseEntity::TokenUserBalance.format(@balance_from_ost)})
+        Result.success({result_type: 'balance',
+                        balance: ResponseEntity::TokenUserBalance.format(@token_user, @balance_from_ost)})
       end
 
     end

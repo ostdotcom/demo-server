@@ -5,8 +5,10 @@ module ResponseEntity
 
     class << self
 
-      def format(balance_data)
+      def format(token_user_data, balance_data)
         {
+          app_user_id: token_user_data[:id],
+          user_id: token_user_data[:uuid],
           total_balance: balance_data[:total_balance],
           available_balance: balance_data[:available_balance],
           unsettled_debit: balance_data[:unsettled_debit],
