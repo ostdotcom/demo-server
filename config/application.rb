@@ -39,9 +39,6 @@ module DemoServer
     # Local machine timezone
     config.active_record.default_timezone = :local
 
-    # Assets prefix
-    config.assets.prefix = "/js-css/common"
-
     # Use cache store
     config.cache_store = :dalli_store, GlobalConstant::Cache.endpoints, GlobalConstant::Cache.config
 
@@ -49,5 +46,16 @@ module DemoServer
     config.autoload_paths << "#{config.root}/lib/"
     config.eager_load_paths << "#{config.root}/lib/"
 
+    # Custom Error response
+    config.exceptions_app = self.routes
+
+    # Exception notification
+    config.middleware.use ExceptionNotification::Rack,
+                          email: {
+                            email_prefix: "Platform Demo #{Rails.env} ::",
+                            sender_address: ENV["DEMO_EXCEPTION_NOTIFICATION_FROM"],
+                            exception_recipients: ENV["DEMO_EXCEPTION_NOTIFICATION_TO"]
+                          },
+                          ignore_exceptions: ExceptionNotifier.ignored_exceptions
   end
 end

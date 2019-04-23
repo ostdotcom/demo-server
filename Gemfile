@@ -9,12 +9,9 @@ gem 'rake', '12.3.1'
 gem 'listen', '3.1.5'
 # Use mysql2 as the database for Active Record
 gem 'mysql2', '0.5.2'
-# Use SCSS for stylesheets
-gem 'sass-rails', '5.0.7'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '4.1.9'
-# YUI compressor
-gem 'yui-compressor', '0.12.0'
+
+# Exception notifier
+gem 'exception_notification', '4.3.0'
 
 # Json formatter
 gem 'oj', '3.3.8'

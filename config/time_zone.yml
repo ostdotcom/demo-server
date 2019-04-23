@@ -1,5 +1,3 @@
 # Rails timezone for different environments
 rails_time_zones:
-  development: 'Asia/Kolkata'
-  staging: 'Etc/UTC'
-  production: 'Etc/UTC'
+  <%= Rails.env %>: <%= ENV["DEMO_APP_TIMEZONE"] %>

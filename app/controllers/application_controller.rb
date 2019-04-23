@@ -22,6 +22,13 @@ class ApplicationController < ActionController::Base
     (render plain: Oj.dump(response, mode: :compat), status: 404) and return
   end
 
+  # Handle error response
+  #
+  def error
+    response = Result.error("a_c_ac_2", "SOMETHING_WENT_WRONG", "Something went wrong")
+    (render plain: Oj.dump(response, mode: :compat), status: (params[:code] || 500)) and return
+  end
+
   # ELB Health Checker
   #
   def health_checker
