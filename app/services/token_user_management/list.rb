@@ -125,9 +125,7 @@ module TokenUserManagement
           end
         end
 
-        puts "fetch_balance_tasks length #{fetch_balance_tasks.length}"
         fetch_balance_tasks.each { |thread| thread.join } # wait for the slowest one to complete
-        puts "fetch_balance_tasks completed for length #{fetch_balance_tasks.length}"
 
         if @balance_fetch_errors.present?
           Rails.logger.error("@balance_fetch_errors: #{@balance_fetch_errors}")
@@ -145,12 +143,10 @@ module TokenUserManagement
     #
     def fetch_balance_from_ost(token_user)
       Thread.new {
-        puts "starting to fetch balance for #{token_user[:uuid]}"
         response = @ost_api_helper.fetch_user_balance({user_id: token_user[:uuid]})
         if response[:success]
           balance_data = response[:data][response[:data][:result_type]]
           @balances[token_user[:id]] = ResponseEntity::TokenUserBalance.format(balance_data)
-          puts "completed for #{token_user[:uuid]}"
         else
           @balance_fetch_errors[token_user[:uuid]] = response
           Rails.logger.error("fetch_balance_from_ost error for #{token_user[:uuid]} response : #{response}")
