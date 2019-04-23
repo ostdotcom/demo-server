@@ -39,10 +39,8 @@ Rails.application.routes.draw do
     match '' => :list, via: :GET
   end
 
-  %w( 400 422 500 ).each do |code|
-    get code, controller: :application, action: :error, code: code
+  %w( 404 400 422 500 ).each do |code|
+    get code, controller: :application, action: :error, :format => false, code: code
   end
-
-  match '*permalink', to: 'application#not_found', via: :all
 
 end

@@ -1,15 +1,13 @@
 require_relative 'boot'
 
-require 'rails/all'
-
 require "rails"
 
 # Include each railties manually
 %w(
   active_record/railtie
+  active_model/railtie
   action_controller/railtie
-  action_view/railtie
-  sprockets/railtie
+  action_mailer/railtie
 ).each do |railtie|
   begin
     require railtie

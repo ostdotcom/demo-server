@@ -15,17 +15,18 @@ class ApplicationController < ActionController::Base
 
   include ApplicationHelper
 
-  # Page not found action
-  #
-  def not_found
-    response = Result.error("a_c_ac_1", "NOT_FOUND", "Page not found")
-    (render plain: Oj.dump(response, mode: :compat), status: 404) and return
-  end
-
   # Handle error response
   #
   def error
-    response = Result.error("a_c_ac_2", "SOMETHING_WENT_WRONG", "Something went wrong")
+    if params[:code].to_i == 404
+      response = Result.error("a_c_ac_1", "NOT_FOUND", "Page not found")
+    elsif params[:code].to_i == 400
+      response = Result.error("a_c_ac_2", "BAD_REQUEST", "Bad request")
+    elsif params[:code].to_i == 422
+      response = Result.error("a_c_ac_3", "UNPROCESSABLE_ENTITY", "Unprocessable entity")
+    else
+      response = Result.error("a_c_ac_4", "SOMETHING_WENT_WRONG", "Something went wrong")
+    end
     (render plain: Oj.dump(response, mode: :compat), status: (params[:code] || 500)) and return
   end
 
