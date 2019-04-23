@@ -18,13 +18,8 @@ class ApplicationController < ActionController::Base
   # Page not found action
   #
   def not_found
-    http_code = 404
-    if request.xhr?
-      response = Result.error("a_c_ac_1", "NOT_FOUND", "Page not found")
-      (render plain: Oj.dump(response, mode: :compat), status: http_code) and return
-    else
-      render file: "public/#{http_code}.html", layout: false, status: http_code and return
-    end
+    response = Result.error("a_c_ac_1", "NOT_FOUND", "Page not found")
+    (render plain: Oj.dump(response, mode: :compat), status: 404) and return
   end
 
   # ELB Health Checker
