@@ -40,7 +40,7 @@ Rails.application.routes.draw do
   end
 
   %w( 404 400 422 500 ).each do |code|
-    get code, controller: :application, action: :error, :format => false, code: code
+    match code, controller: :application, action: :error, :format => false, code: code, via: [:GET, :POST]
   end
 
 end
