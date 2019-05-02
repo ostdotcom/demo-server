@@ -66,7 +66,7 @@ module TokenUserManagement
     #
     def validate_search_term
       if @q.present?
-        return Result.error('a_s_tum_l_3', 'INVALID_REQUEST', 'Invalid page') unless Validator.is_alpha_space?(@q)
+        return Result.error('a_s_tum_l_3', 'INVALID_REQUEST', 'Invalid search term') unless Validator.is_alphanumeric?(@q)
         @q.strip!
       end
       Result.success({})
