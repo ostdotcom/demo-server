@@ -10,7 +10,7 @@ module GlobalConstant
       end
 
       def count_of_users_eligible
-        5
+        10
       end
 
       # This is the percentage of company reserve's current balance, which could be used for grant
