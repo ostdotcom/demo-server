@@ -126,7 +126,7 @@ class OstApiHelper
   def handle_ost_response(response)
     unless response['success']
       Rails.logger.error("Error in API Call To OST: #{response}")
-      return Result.error('l_oah_1', 'INTERNAL_SERVER_ERROR', 'Request to OST failed')
+      return Result.error('l_oah_1', response['err']['code'], response['err']['msg'])
     end
     Result.success(HashWithIndifferentAccess.new(response['data']))
   end
