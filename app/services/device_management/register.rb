@@ -95,7 +95,11 @@ module DeviceManagement
 
       response = ost_api_helper.register_device({user_id: @token_user[:uuid], address: @address, api_signer_address: @api_signer_address})
       unless response[:success]
-        return Result.error('a_s_dm_r_6', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        if response[:code] == 'ALREADY_EXISTS'
+          return response
+        else
+          return Result.error('a_s_dm_r_6', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        end
       end
 
       @ost_device_data = response[:data][response[:data][:result_type]]
