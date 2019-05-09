@@ -10,7 +10,7 @@ class Api::AuthenticationController < Api::BaseController
     else
       delete_cookie(GlobalConstant::Cookie.user_authentication_cookie)
     end
-    render plain: Oj.dump(response, mode: :compat) and return
+    return render_api_response(response)
   end
 
   # Login
@@ -22,7 +22,7 @@ class Api::AuthenticationController < Api::BaseController
     else
       delete_cookie(GlobalConstant::Cookie.user_authentication_cookie)
     end
-    render plain: Oj.dump(response, mode: :compat) and return
+    return render_api_response(response)
   end
 
 end

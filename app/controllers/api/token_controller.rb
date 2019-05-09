@@ -4,7 +4,7 @@ class Api::TokenController < Api::BaseController
   #
   def get
     response = TokenManagement::Get.new(params).perform()
-    render plain: Oj.dump(response, mode: :compat) and return
+    return render_api_response(response)
   end
 
 end

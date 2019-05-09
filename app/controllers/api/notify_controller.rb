@@ -4,7 +4,7 @@ class Api::NotifyController < Api::BaseController
   #
   def user_activate
     response = NotificationManagement::UserActivate.new(params).perform()
-    render plain: Oj.dump(response, mode: :compat) and return
+    return render_api_response(response)
   end
 
 end

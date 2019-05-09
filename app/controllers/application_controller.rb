@@ -15,6 +15,15 @@ class ApplicationController < ActionController::Base
 
   include ApplicationHelper
 
+  # render API response
+  #
+  def render_api_response(response)
+    unless response[:success]
+      Rails.logger.error("error in API Call: #{response}")
+    end
+    render plain: Oj.dump(response, mode: :compat) and return
+  end
+
   # Handle error response
   #
   def error
