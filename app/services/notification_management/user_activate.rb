@@ -36,7 +36,10 @@ module NotificationManagement
       return r unless r[:success]
 
       r = check_eligibility_and_grant_bt
-      return r unless r[:success]
+      unless r[:success]
+        # as grant is not a blocker to activate user. proceed to user activation even if it fails
+        Rails.logger.info("check_eligibility_and_grant_bt error: #{r}")
+      end
 
       r = update_token_user
       return r unless r[:success]
@@ -136,7 +139,7 @@ module NotificationManagement
 
      # if user isn't eligible. return success
       r = check_user_eligibility
-      return Result.success({}) unless r[:success]
+      return r unless r[:success]
 
       r = determine_grant_amount
       return r unless r[:success]
