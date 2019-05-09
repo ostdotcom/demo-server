@@ -8,6 +8,9 @@ module CacheManagement
       data_cache = super
       data_cache.each do |id, token_data|
         next if token_data.blank?
+        # deep dup to not modify the current object
+        token_data = token_data.deep_dup
+        data_cache[id] = token_data
         lc_to_decrypt = LocalCipher.new(GlobalConstant::Base.local_cipher_key)
         lc_to_decrypt_res = lc_to_decrypt.decrypt(token_data[:api_secret])
         if lc_to_decrypt_res[:success]

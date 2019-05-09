@@ -8,6 +8,9 @@ module CacheManagement
       data_cache = super
       data_cache.each do |id, user_data|
         next if user_data.blank?
+        # deep dup to not modify the current object
+        user_data = user_data.deep_dup
+        data_cache[id] = user_data
         lc_to_decrypt = LocalCipher.new(GlobalConstant::Base.local_cipher_key)
         # Decrypt Password
         lc_to_decrypt_password_res = lc_to_decrypt.decrypt(user_data[:password])
