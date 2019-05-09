@@ -179,6 +179,11 @@ module NotificationManagement
       grant_amount = amount_for_grants / GlobalConstant::Grant.count_of_users_eligible
 
       if grant_amount < GlobalConstant::Grant.min_bt_wei_grant_amount
+        Rails.logger.error('insufficent min_bt_wei_grant_amount')
+        Rails.logger.info("grant_amount: #{grant_amount}")
+        Rails.logger.info("min_bt_wei_grant_amount: #{GlobalConstant::Grant.min_bt_wei_grant_amount}")
+        Rails.logger.info("available_reserve_balance: #{available_reserve_balance}")
+        Rails.logger.info("amount_for_grants: #{amount_for_grants}")
         return Result.error('a_s_um_s_10', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
