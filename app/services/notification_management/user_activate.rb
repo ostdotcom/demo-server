@@ -233,8 +233,8 @@ module NotificationManagement
       }
       execute_params[:raw_calldata] = raw_calldata.to_json
       meta_property = {
-        name: "Welcome Grant" ,
-        type: "company_to_user"
+        name: 'Welcome to Demo Wallet',
+        type: 'company_to_user'
       }
       execute_params[:meta_property] = meta_property
 
