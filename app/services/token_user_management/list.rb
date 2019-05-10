@@ -157,7 +157,7 @@ module TokenUserManagement
     # final response
     #
     def final_response
-      meta = {}
+      meta = {next_page_payload: {}}
       if @has_next_page
         meta[:next_page_payload] = {page: @page + 1}
         meta[:next_page_payload][:q] = @q if @q.present?
