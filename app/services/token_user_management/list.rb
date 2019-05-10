@@ -115,7 +115,7 @@ module TokenUserManagement
         token_user_ar = token_user_ar.where("username LIKE ?", "%#{@q}%") if @q.present?
         token_user_ar = token_user_ar.limit(@limit+1).offset((@page-1)*@limit).order(:username)
         token_user_ar.all.each_with_index do |token_user, index|
-          if (index+1) == @limit
+          if index == @limit
             @has_next_page = true
             break
           end
