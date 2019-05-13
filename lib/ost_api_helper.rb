@@ -124,11 +124,12 @@ class OstApiHelper
   # handle OST response
   #
   def handle_ost_response(response)
-    unless response['success']
-      Rails.logger.error("Error in API Call To OST: #{response}")
-      return Result.error('l_oah_1', response['err']['code'], response['err']['msg'])
+    formatted_response = HashWithIndifferentAccess.new(response)
+    unless formatted_response[:success]
+      Rails.logger.error("Error in API Call To OST: #{formatted_response}")
+      return Result.error('l_oah_1', formatted_response[:err][:code], response[:err][:msg])
     end
-    Result.success(HashWithIndifferentAccess.new(response['data']))
+    Result.success(formatted_response[:data])
   end
 
 end
