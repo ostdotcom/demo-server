@@ -1,22 +1,53 @@
-# README
+# OST Demo Mappy Server
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+OST Demo Mappy Server is a sample implementation of ________________
 
-Things you may want to cover:
+## Setup
 
-* Ruby version
+### 1. Prerequisites 
 
-* System dependencies
+- RVM : install using [rvm](https://rvm.io/rvm/install)
+- Ruby : using rvm above install Ruby with version >= 2.5.3
+- Mysql : run local instance or use [AWS RDS](https://aws.amazon.com/rds/)
+- Memcache : run local instance using [Memcached](https://memcached.org/) or use [AWS ElastiCache for Memcached](https://aws.amazon.com/elasticache/memcached/)
+- Key Management Services : use [AWS KMS](https://aws.amazon.com/kms/) 
 
-* Configuration
+### 2. Create configuration file 
 
-* Database creation
+Refer to [env.sh.example](env.sh.example) to create a new configuration file (env.sh).
 
-* Database initialization
+### 3. Populate ENV Variables
 
-* How to run the test suite
+From the configuration file created above, populate ENV variables for the processes below to access.
 
-* Services (job queues, cache servers, search engines, etc.)
+```bash
+source env.sh
+```
 
-* Deployment instructions
+### 4. Run Database Migrations
+
+#### a. Drop existing tables and databases if any. CAUTION.
+
+```bash
+rake db:drop:all RAILS_ENV=$RAILS_ENV
+```
+
+#### b. Create all the databases.
+
+```bash
+rake db:create:all RAILS_ENV=$RAILS_ENV
+```
+
+#### c. Run all the migrations.
+
+```bash
+rake db:migrate RAILS_ENV=$RAILS_ENV
+```
+
+### 5. Start Rails Server
+
+```bash
+bin/rails server -e $RAILS_ENV -p 4000
+```
+
+NOTE: For Staging / Production environments we would recommend using [Nginx + Passenger](https://www.phusionpassenger.com/library/config/nginx/intro.html)
