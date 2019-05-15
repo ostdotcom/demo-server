@@ -9,7 +9,7 @@ module TokenUserManagement
       @token_id = @token[:id]
       @q = params[:q]
       @page = params[:page]
-      @limit = 25
+      @limit = 15
 
       @token_secure = nil
       @api_endpoint = nil
