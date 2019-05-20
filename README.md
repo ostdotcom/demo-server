@@ -1,6 +1,6 @@
 # OST Demo Mappy Server
 
-OST Demo Mappy Server is a sample implementation of ________________
+OST Demo Application Server is a sample implementation of a backend-server of a mobile application that uses the OST Wallet SDK. 
 
 ## Setup
 
