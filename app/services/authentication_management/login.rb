@@ -14,9 +14,6 @@ module AuthenticationManagement
       r = validate_params
       return r unless r[:success]
 
-      r = update_token_user
-      return r unless r[:success]
-
       final_response
     end
 
@@ -45,20 +42,6 @@ module AuthenticationManagement
       return Result.error('a_s_um_l_2',
                           'INVALID_REQUEST',
                           'Token user not found or password incorrect') if existing_token_user_secure[:password] != @password
-
-      Result.success({})
-    end
-
-    # Update token user
-    #
-    def update_token_user
-      begin
-        @token_user_obj.cookie_salt = SecureRandom.hex(35)
-        @token_user_obj.save!
-      rescue => e
-        Rails.logger.error("update_token_user exception: #{e.message}")
-        return Result.error('a_s_um_l_3', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
-      end
 
       Result.success({})
     end
