@@ -20,16 +20,16 @@ module GlobalConstant
         10
       end
 
-      def min_bt_wei_grant_amount
-        BigDecimal.new('1') * wei_multiplication_factor
+      def min_bt_smallest_unit_grant_amount(decimals)
+        BigDecimal.new('1') * smallest_unit_multiplication_factor(decimals)
       end
 
-      def max_bt_wei_grant_amount
-        BigDecimal.new('10') * wei_multiplication_factor
+      def max_bt_smallest_unit_grant_amount(decimals)
+        BigDecimal.new('10') * smallest_unit_multiplication_factor(decimals)
       end
 
-      def wei_multiplication_factor
-        BigDecimal.new('1000000000000000000')
+      def smallest_unit_multiplication_factor(decimals)
+        BigDecimal.new('10').power(decimals)
       end
 
       def rule_name_to_use_for_grant

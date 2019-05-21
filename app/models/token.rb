@@ -9,6 +9,7 @@ class Token < ApplicationRecord
       ost_token_id: ost_token_id,
       name: name,
       symbol: symbol,
+      decimal: decimal,
       conversion_factor: conversion_factor,
       pc_token_holder_uuid: pc_token_holder_uuid,
       url_id: url_id,

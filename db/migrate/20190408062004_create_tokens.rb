@@ -5,6 +5,7 @@ class CreateTokens < ActiveRecord::Migration[5.2]
       t.column :api_endpoint_id, :integer, null: false
       t.column :name, :string, null: false
       t.column :symbol, :string, null: false
+      t.column :decimal, :tinyint, null: false
       t.column :conversion_factor, :decimal, precision: 15, scale: 6, null: false
       t.column :url_id, :string, null: false
       t.column :api_key, :text, null: false

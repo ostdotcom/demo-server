@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 2019_04_08_084642) do
     t.integer "api_endpoint_id", null: false
     t.string "name", null: false
     t.string "symbol", null: false
+    t.integer "decimal", limit: 1, null: false
     t.decimal "conversion_factor", precision: 15, scale: 6, null: false
     t.string "url_id", null: false
     t.text "api_key", null: false

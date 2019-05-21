@@ -81,6 +81,7 @@ module SetupToken
                                  api_endpoint_id: @api_endpoint_id,
                                  name: @name,
                                  symbol: @symbol,
+                                 decimal: @token_details_from_ost[:decimal],
                                  conversion_factor: @conversion_factor,
                                  url_id: @url_id,
                                  api_key: @api_key,

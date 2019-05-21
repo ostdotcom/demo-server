@@ -178,17 +178,20 @@ module NotificationManagement
       amount_for_grants = available_reserve_balance * GlobalConstant::Grant.percent_of_balance_to_be_used_for_grant / 100
       grant_amount = amount_for_grants / GlobalConstant::Grant.count_of_users_eligible
 
-      if grant_amount < GlobalConstant::Grant.min_bt_wei_grant_amount
-        Rails.logger.error('insufficent min_bt_wei_grant_amount')
+      min_bt_smallest_unit_grant_amount = GlobalConstant::Grant.min_bt_smallest_unit_grant_amount(@token[:decimal])
+      max_bt_smallest_unit_grant_amount = GlobalConstant::Grant.max_bt_smallest_unit_grant_amount(@token[:decimal])
+
+      if grant_amount < min_bt_smallest_unit_grant_amount
+        Rails.logger.error('insufficent min_bt_smallest_unit_grant_amount')
         Rails.logger.info("grant_amount: #{grant_amount}")
-        Rails.logger.info("min_bt_wei_grant_amount: #{GlobalConstant::Grant.min_bt_wei_grant_amount}")
+        Rails.logger.info("min_bt_smallest_unit_grant_amount: #{min_bt_smallest_unit_grant_amount}")
         Rails.logger.info("available_reserve_balance: #{available_reserve_balance}")
         Rails.logger.info("amount_for_grants: #{amount_for_grants}")
         return Result.error('a_s_um_s_10', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
-      if grant_amount > GlobalConstant::Grant.max_bt_wei_grant_amount
-        grant_amount = GlobalConstant::Grant.max_bt_wei_grant_amount
+      if grant_amount > max_bt_smallest_unit_grant_amount
+        grant_amount = max_bt_smallest_unit_grant_amount
       end
 
       @bt_grant_amount_in_wei = grant_amount
