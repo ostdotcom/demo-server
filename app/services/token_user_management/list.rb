@@ -15,8 +15,11 @@ module TokenUserManagement
       @api_endpoint = nil
       @ost_api_helper = nil
       @users = []
+      @async_tasks = []
       @balances = {}
-      @balance_fetch_errors = {}
+      @async_tasks_errors = {
+        fetch_balance_from_ost: {}
+      }
       @has_next_page = false
     end
 
@@ -29,10 +32,21 @@ module TokenUserManagement
       r = set_ost_api_helper
       return r unless r[:success]
 
-      r = get_users_and_balances
-      return r unless r[:success]
+      # fetch users from DB and append fetch balance API calls to @async_tasks
+      get_users_and_balances
 
+      # fetch price points from OST
+      @async_tasks.push(fetch_price_points_from_ost)
+
+      @async_tasks.each { |thread| thread.join } # wait for the slowest one to complete
+
+      if @async_tasks_errors[:fetch_balance_from_ost].present? || @async_tasks_errors[:fetch_price_points_from_ost].present?
+        Rails.logger.error("@async_tasks_errors: #{@async_tasks_errors}")
+        return Result.error('a_s_tum_l_4', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+      end
+      
       final_response
+      
     end
 
     private
@@ -90,7 +104,7 @@ module TokenUserManagement
     #
     def fetch_token_secure
       @token_secure = CacheManagement::TokenSecureById.new([@token_id]).fetch()[@token_id]
-      return Result.error('a_s_tum_fliu_gl_1',
+      return Result.error('a_s_tum_l_4',
                           'INVALID_REQUEST',
                           'Invalid token') if @token_secure.blank?
       Result.success({})
@@ -100,7 +114,7 @@ module TokenUserManagement
     #
     def fetch_api_endpoint
       @api_endpoint = ApiEndpoint.id_to_endpoint_map[@token[:api_endpoint_id]]
-      return Result.error('a_s_tum_fliu_gl_2',
+      return Result.error('a_s_tum_l_5',
                           'INVALID_REQUEST',
                           'Invalid token') if @api_endpoint.blank?
       Result.success({})
@@ -110,7 +124,6 @@ module TokenUserManagement
     #
     def get_users_and_balances
       begin
-        fetch_balance_tasks = []
         token_user_ar = ::TokenUser.where(token_id: @token[:id])
         token_user_ar = token_user_ar.where("username LIKE ?", "%#{@q}%") if @q.present?
         token_user_ar = token_user_ar.limit(@limit+1).offset((@page-1)*@limit).order(:username)
@@ -121,20 +134,12 @@ module TokenUserManagement
           end
           @users << ResponseEntity::TokenUser.format(token_user)
           if token_user[:ost_user_status] == GlobalConstant::User.activated_ost_user_status
-            fetch_balance_tasks.push(fetch_balance_from_ost(token_user))
+            @async_tasks.push(fetch_balance_from_ost(token_user))
           end
         end
-
-        fetch_balance_tasks.each { |thread| thread.join } # wait for the slowest one to complete
-
-        if @balance_fetch_errors.present?
-          Rails.logger.error("@balance_fetch_errors: #{@balance_fetch_errors}")
-          return Result.error('a_s_tum_l_4', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
-        end
-
       rescue => e
         Rails.logger.error("get_users_and_balances exception: #{e.message}")
-        return Result.error('a_s_tum_l_5', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_tum_l_6', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
       Result.success({})
     end
@@ -148,12 +153,25 @@ module TokenUserManagement
           balance_data = response[:data][response[:data][:result_type]]
           @balances[token_user[:id]] = ResponseEntity::TokenUserBalance.format(token_user, balance_data)
         else
-          @balance_fetch_errors[token_user[:uuid]] = response
+          @async_tasks_errors[:fetch_balance_from_ost][token_user[:uuid]] = response
           Rails.logger.error("fetch_balance_from_ost error for #{token_user[:uuid]} response : #{response}")
         end
       }
     end
-
+    
+    # Fetch price points from OST
+    #
+    def fetch_price_points_from_ost
+      Thread.new {
+        response = @ost_api_helper.fetch_price_points({chain_id: @token[:chain_id]})
+        if response[:success]
+          @ost_price_point_data = response[:data][response[:data][:result_type]]
+        else
+          @async_tasks_errors[:fetch_price_points_from_ost] = Result.error('a_s_tum_baui_gb_2', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        end
+      }
+    end
+    
     # final response
     #
     def final_response
@@ -162,7 +180,8 @@ module TokenUserManagement
         meta[:next_page_payload] = {page: @page + 1}
         meta[:next_page_payload][:q] = @q if @q.present?
       end
-      Result.success({result_type: 'users', users: @users, balances: @balances, meta: meta})
+      Result.success({result_type: 'users', users: @users, meta: meta,
+                      balances: @balances, price_point: @ost_price_point_data})
     end
 
   end
