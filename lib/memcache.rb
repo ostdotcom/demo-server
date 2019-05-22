@@ -22,9 +22,9 @@ class Memcache
     end
 
     def read_multi(keys, _marshaling = true)
-      t_start = Time.now.to_f
+      t_start = Time.now
       ret = Rails.cache.read_multi(*keys)
-      Rails.logger.debug "Memcache multi get took #{Time.now.to_f - t_start} s"
+      Rails.logger.debug "Memcache multi get took #{(Time.now - t_start).to_f.to_s} s"
       return ret
     rescue => exc
       Rails.logger.error { "MEMCACHE-ERROR: read_multi: K: #{keys}. M: #{exc.message}, I: #{exc.inspect}" }
