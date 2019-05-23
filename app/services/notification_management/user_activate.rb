@@ -183,6 +183,7 @@ module NotificationManagement
 
       if grant_amount < min_bt_smallest_unit_grant_amount
         Rails.logger.error('insufficent min_bt_smallest_unit_grant_amount')
+        Rails.logger.info("@token[:decimal]: #{@token[:decimal]}")
         Rails.logger.info("grant_amount: #{grant_amount}")
         Rails.logger.info("min_bt_smallest_unit_grant_amount: #{min_bt_smallest_unit_grant_amount}")
         Rails.logger.info("available_reserve_balance: #{available_reserve_balance}")
