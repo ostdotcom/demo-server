@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   scope 'demo/api/:ost_token_id/:url_id/users', controller: 'api/token_user', :format => false do
     match 'logout' => :logout, via: :POST
     match 'current-user' => :logged_in_user_detail, via: :GET
+    match 'current-user-salt' => :logged_in_user_salts, via: :GET
     match 'ledger' => :logged_in_user_ledger, via: :GET
     match '' => :list, via: :GET
   end
