@@ -14,12 +14,8 @@ module CacheManagement
         lc_to_decrypt = LocalCipher.new(GlobalConstant::Base.local_cipher_key)
         # Decrypt Password
         lc_to_decrypt_password_res = lc_to_decrypt.decrypt(user_data[:password])
-        # Decrypt User Pin Salt
-        lc_to_decrypt_user_pin_salt_res = lc_to_decrypt.decrypt(user_data[:user_pin_salt])
-
-        if lc_to_decrypt_password_res[:success] && lc_to_decrypt_user_pin_salt_res[:success]
+        if lc_to_decrypt_password_res[:success]
           user_data[:password] = lc_to_decrypt_password_res[:data][:plaintext]
-          user_data[:user_pin_salt] = lc_to_decrypt_user_pin_salt_res[:data][:plaintext]
         else
           data_cache[id] = {}
         end

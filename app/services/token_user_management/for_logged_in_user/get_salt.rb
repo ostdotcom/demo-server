@@ -42,12 +42,12 @@ module TokenUserManagement
           return Result.error('a_s_tum_gs_1', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
 
         end
-        # lc_to_decrypt = LocalCipher.new(GlobalConstant::Base.local_cipher_key)
-        # decrypt_user_pin_salt_res = lc_to_decrypt.decrypt(token_user_secure[:user_pin_salt])
-        # return decrypt_user_pin_salt_res unless decrypt_user_pin_salt_res[:success]
+
+        lc_to_decrypt = LocalCipher.new(GlobalConstant::Base.local_cipher_key)
+        decrypt_user_pin_salt_res = lc_to_decrypt.decrypt(token_user_secure[:user_pin_salt])
+        return decrypt_user_pin_salt_res unless decrypt_user_pin_salt_res[:success]
         @user_salts = {
-          # recovery_pin_salt: decrypt_user_pin_salt_res[:data][:plaintext],
-          recovery_pin_salt: token_user_secure[:user_pin_salt],
+          recovery_pin_salt: decrypt_user_pin_salt_res[:data][:plaintext],
           created_at: token_user_secure[:created_at],
           updated_at: token_user_secure[:updated_at]
         }
