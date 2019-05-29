@@ -56,7 +56,7 @@ module TokenUserManagement
       def final_response
         Result.success({
                            result_type: 'current_user_salt',
-                           current_user_salt: ResponseEntity::CurrentTokenUserSalt.format(@user_salts)
+                           current_user_salt: ResponseEntity::CurrentTokenUserSalt.format(@token_user, @user_salts)
                        })
       end
 
