@@ -8,6 +8,7 @@ module TokenUserManagement
       @token = params[:token]
       @token_id = @token[:id]
       @q = params[:q]
+      @app_user_ids = params[:app_user_ids]
       @page = params[:page]
       @limit = 15
 
@@ -60,6 +61,9 @@ module TokenUserManagement
       r = validate_search_term
       return r unless r[:success]
 
+      r = validate_app_user_ids
+      return r unless r[:success]
+
       Result.success({})
     end
 
@@ -82,6 +86,27 @@ module TokenUserManagement
       if @q.present?
         return Result.error('a_s_tum_l_3', 'INVALID_REQUEST', 'Invalid search term') unless Validator.is_alphanumeric?(@q)
         @q.strip!
+      end
+      Result.success({})
+    end
+
+    # validate app user ids
+    #
+    def validate_app_user_ids
+      if @app_user_ids.present?
+        unless Validator.is_array?(@app_user_ids)
+          return Result.error('a_s_tum_l_8', 'INVALID_REQUEST', 'Invalid app user ids')
+        end
+        if @app_user_ids.length > 100
+          return Result.error('a_s_tum_l_9', 'INVALID_REQUEST', 'Invalid app user ids. Max 100 allowed.')
+        end
+        @app_user_ids.each do |app_user_id|
+          unless Validator.is_numeric?(app_user_id)
+            return Result.error('a_s_tum_l_10', 'INVALID_REQUEST', 'Invalid app user ids')
+          end
+        end
+      else
+        @app_user_ids = []
       end
       Result.success({})
     end
@@ -126,6 +151,7 @@ module TokenUserManagement
       begin
         token_user_ar = ::TokenUser.where(token_id: @token[:id])
         token_user_ar = token_user_ar.where("username LIKE ?", "%#{@q}%") if @q.present?
+        token_user_ar = token_user_ar.where(id: @app_user_ids) if @app_user_ids.present?
         token_user_ar = token_user_ar.limit(@limit+1).offset((@page-1)*@limit).order(:username)
         token_user_ar.all.each_with_index do |token_user, index|
           if index == @limit
@@ -167,7 +193,7 @@ module TokenUserManagement
         if response[:success]
           @ost_price_point_data = response[:data][response[:data][:result_type]]
         else
-          @async_tasks_errors[:fetch_price_points_from_ost] = Result.error('a_s_tum_baui_gb_2', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+          @async_tasks_errors[:fetch_price_points_from_ost] = Result.error('a_s_tum_l_7', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
         end
       }
     end
