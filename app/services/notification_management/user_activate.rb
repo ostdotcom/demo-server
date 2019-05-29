@@ -83,7 +83,7 @@ module NotificationManagement
     #
     def fetch_api_endpoint
       @api_endpoint = ApiEndpoint.id_to_endpoint_map[@token[:api_endpoint_id]]
-      return Result.error('a_s_um_s_4',
+      return Result.error('a_s_nm_ua_4',
                           'INVALID_REQUEST',
                           'Invalid token') if @api_endpoint.blank?
       Result.success({})
@@ -102,13 +102,13 @@ module NotificationManagement
     def fetch_user_from_ost
       response = @ost_api_helper.fetch_user_details({user_id: @token_user[:uuid]})
       unless response[:success]
-        return Result.error('a_s_um_s_5', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_nm_ua_5', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       @user_data_from_ost = response[:data][response[:data][:result_type]]
 
       if @user_data_from_ost[:token_holder_address].blank?
-        return Result.error('a_s_um_s_6', 'INVALID_REQUEST',
+        return Result.error('a_s_nm_ua_6', 'INVALID_REQUEST',
                             "Token holder contract hasn't been deployed yet")
       end
 
@@ -127,7 +127,7 @@ module NotificationManagement
         token_user_obj.save! if token_user_obj.changed?
       rescue => e
         Rails.logger.error("update_token_user exception: #{e.message}")
-        return Result.error('a_s_um_s_7', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_nm_ua_7', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       Result.success({})
@@ -159,7 +159,7 @@ module NotificationManagement
     def check_user_eligibility
       count = TokenUser.where(token_id: @token_id, ost_user_status: GlobalConstant::User.activated_ost_user_status).count
       if count > GlobalConstant::Grant.count_of_users_eligible
-        return Result.error('a_s_um_s_8', 'INVALID_REQUEST', 'Grant user limit breached')
+        return Result.error('a_s_nm_ua_8', 'INVALID_REQUEST', 'Grant user limit breached')
       end
       Result.success({})
     end
@@ -170,7 +170,7 @@ module NotificationManagement
 
       response = @ost_api_helper.fetch_user_balance({user_id: @token[:pc_token_holder_uuid]})
       unless response[:success]
-        return Result.error('a_s_um_s_9', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_nm_ua_9', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       available_reserve_balance = BigDecimal.new(response[:data][response[:data][:result_type]][:available_balance])
@@ -188,7 +188,7 @@ module NotificationManagement
         Rails.logger.info("min_bt_smallest_unit_grant_amount: #{min_bt_smallest_unit_grant_amount}")
         Rails.logger.info("available_reserve_balance: #{available_reserve_balance}")
         Rails.logger.info("amount_for_grants: #{amount_for_grants}")
-        return Result.error('a_s_um_s_10', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_nm_ua_10', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       if grant_amount > max_bt_smallest_unit_grant_amount
@@ -207,7 +207,7 @@ module NotificationManagement
 
       response = @ost_api_helper.fetch_rules
       unless response[:success]
-        return Result.error('a_s_um_s_11', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_nm_ua_11', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       rules_data = response[:data][response[:data][:result_type]]
@@ -219,7 +219,7 @@ module NotificationManagement
       end
 
       if @rule_address_from_ost.blank?
-        return Result.error('a_s_um_s_12', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_nm_ua_12', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       Result.success({})
@@ -249,7 +249,7 @@ module NotificationManagement
 
       response = @ost_api_helper.initiate_fund_transfer(execute_params)
       unless response[:success]
-        return Result.error('a_s_um_s_13', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        return Result.error('a_s_nm_ua_13', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
       end
 
       Result.success({})
