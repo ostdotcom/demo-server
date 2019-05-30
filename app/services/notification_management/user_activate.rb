@@ -260,7 +260,7 @@ module NotificationManagement
     #
     def final_response
       updated_token_user_secure = CacheManagement::TokenUserSecure.new([@token_user[:id]]).fetch()[@token_user[:id]]
-      updated_token_user = CacheManagement::TokenUser.new([@token_user[:id]]).fetch()[@token_user[:id]]
+      updated_token_user = CacheManagement::TokenUserById.new([@token_user[:id]]).fetch()[@token_user[:id]]
       Result.success({
                          result_type: 'current_user',
                          current_user: ResponseEntity::CurrentTokenUser.format(updated_token_user, updated_token_user_secure)

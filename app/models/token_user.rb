@@ -14,7 +14,7 @@ class TokenUser < ApplicationRecord
     return nil if token_user_secure_cache.blank?
 
     if self.get_cookie_token(token_user_secure_cache, ctime) == cookie_token
-      return CacheManagement::TokenUser.new([token_user_id]).fetch()[token_user_id]
+      return CacheManagement::TokenUserById.new([token_user_id]).fetch()[token_user_id]
     else
       return nil
     end
@@ -99,7 +99,8 @@ class TokenUser < ApplicationRecord
   # Flush cache
   #
   def flush_cache
-    CacheManagement::TokenUser.new([id]).clear
+    CacheManagement::TokenUserById.new([id]).clear
+    CacheManagement::TokenUserByUuid.new([uuid]).clear
     CacheManagement::TokenUserSecure.new([id]).clear
   end
 end

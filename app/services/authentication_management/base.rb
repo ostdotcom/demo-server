@@ -55,7 +55,7 @@ module AuthenticationManagement
     #
     def final_response
       @token_user_secure ||= CacheManagement::TokenUserSecure.new([@token_user_obj[:id]]).fetch()[@token_user_obj[:id]]
-      @token_user ||= CacheManagement::TokenUser.new([@token_user_obj[:id]]).fetch()[@token_user_obj[:id]]
+      @token_user ||= CacheManagement::TokenUserById.new([@token_user_obj[:id]]).fetch()[@token_user_obj[:id]]
       Result.success({
                        result_type: 'current_user',
                        current_user: ResponseEntity::CurrentTokenUser.format(@token_user, @token_user_secure),

@@ -1,6 +1,6 @@
 module CacheManagement
 
-  class TokenUser < CacheManagement::Base
+  class TokenUserById < CacheManagement::Base
 
     private
 
@@ -17,7 +17,7 @@ module CacheManagement
     # Fetch cache key
     #
     def get_cache_key(id)
-      "token_user_#{id}"
+      "token_user_bid_#{id}"
     end
 
     # Fetch cache expiry (in seconds)

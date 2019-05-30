@@ -40,7 +40,7 @@ module TokenUserManagement
       #
       def get_user_detail
 
-        @token_user = CacheManagement::TokenUser.new([@app_user_id]).fetch()[@app_user_id]
+        @token_user = CacheManagement::TokenUserById.new([@app_user_id]).fetch()[@app_user_id]
 
         if @token_user.blank? || @token_user[:token_id] != @token[:id]
           return Result.error('a_s_tum_baui_b_2', 'INVALID_REQUEST', 'Invalid token user id')
