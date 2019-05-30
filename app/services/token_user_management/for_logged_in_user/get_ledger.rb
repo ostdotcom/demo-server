@@ -15,7 +15,7 @@ module TokenUserManagement
         @token_secure = nil
         @api_endpoint = nil
         @ost_api_helper = nil
-        @ledger_from_ost = nil
+        @api_response_data = nil
       end
 
       # Perform action
@@ -28,6 +28,9 @@ module TokenUserManagement
         return r unless r[:success]
 
         r = fetch_ledger_from_ost
+        return r unless r[:success]
+
+        r = fetch_user_data_from_db
         return r unless r[:success]
 
         final_response
@@ -90,23 +93,68 @@ module TokenUserManagement
       # fetch ledger from OST
       #
       def fetch_ledger_from_ost
+
         fetch_ledger_params = {user_id: @token_user[:uuid]}
         if @pagination_identifier.present?
           fetch_ledger_params[:pagination_identifier] = @pagination_identifier
         end
+
         response = @ost_api_helper.fetch_user_transaction_ledger(fetch_ledger_params)
         unless response[:success]
           return Result.error('a_s_tum_fliu_gl_4', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
         end
-        @ledger_from_ost = response[:data]
+
+        # Initialize Response data with OST Response
+        @api_response_data = response[:data]
+
         Result.success({})
+      end
+
+      # fetch user data from DB
+      #
+      def fetch_user_data_from_db
+
+        @api_response_data[:transaction_users] = {}
+
+        uuids_set = Set.new([])
+        # Collect user uuid(s) from @api_response_data
+        @api_response_data[@api_response_data[:result_type]].each do |transaction|
+          transaction[:transfers].each do |transfer|
+            uuids_set.add(transfer[:from_user_id]) if transfer[:from_user_id].present?
+            uuids_set.add(transfer[:to_user_id]) if transfer[:to_user_id].present?
+          end
+        end
+
+        uuids_array = uuids_set.to_a
+        return Result.success({}) unless uuids_array.any?
+
+        token_user_data_by_uuid = CacheManagement::TokenUserByUuid.new(uuids_array).fetch()
+
+        # collect uuids which were not found in TokenUser
+        missing_uuids, uuid_token_user_id_map, token_user_ids = [], {}, []
+        uuids_array.each do |uuid|
+          if token_user_data_by_uuid[uuid].present?
+            uuid_token_user_id_map[uuid] = token_user_data_by_uuid[uuid][:id]
+            token_user_ids.push(token_user_data_by_uuid[uuid][:id])
+          else
+            missing_uuids.push(uuid)
+          end
+        end
+
+        token_users_data_by_id = CacheManagement::TokenUserById.new(token_user_ids).fetch()
+
+        uuid_token_user_id_map.each do |uuid, token_user_id|
+          @api_response_data[:transaction_users][uuid] = ResponseEntity::TokenUser.format(token_users_data_by_id[token_user_id])
+        end
+
+        return Result.success({})
+
       end
 
       # final response
       #
       def final_response
-        # Forwarding response as is
-        Result.success(@ledger_from_ost)
+        Result.success(@api_response_data)
       end
 
     end
