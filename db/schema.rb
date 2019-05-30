@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_08_084642) do
+ActiveRecord::Schema.define(version: 2019_05_29_145134) do
 
   create_table "api_endpoints", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "endpoint", null: false
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 2019_04_08_084642) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["token_id", "username"], name: "uk_1", unique: true
+    t.index ["uuid"], name: "uk_2", unique: true
   end
 
   create_table "tokens", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
