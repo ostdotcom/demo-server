@@ -94,6 +94,8 @@ module TokenUserManagement
     #
     def validate_app_user_ids
       if @app_user_ids.present?
+        # as this is a JSON stringified version, parse it
+        @app_user_ids = JSON.parse(@app_user_ids)
         unless Validator.is_array?(@app_user_ids)
           return Result.error('a_s_tum_l_8', 'INVALID_REQUEST', 'Invalid app user ids')
         end
