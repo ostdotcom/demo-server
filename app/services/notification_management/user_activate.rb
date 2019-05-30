@@ -195,7 +195,7 @@ module NotificationManagement
         grant_amount = max_bt_smallest_unit_grant_amount
       end
 
-      @bt_grant_amount_in_wei = grant_amount
+      @bt_grant_amount_in_wei = grant_amount.truncate.to_s
 
       Result.success({})
 
@@ -237,7 +237,7 @@ module NotificationManagement
         method: 'directTransfers',
         parameters: [
           [@user_data_from_ost[:token_holder_address]],
-          [@bt_grant_amount_in_wei.truncate.to_s]
+          [@bt_grant_amount_in_wei]
         ]
       }
       execute_params[:raw_calldata] = raw_calldata.to_json
