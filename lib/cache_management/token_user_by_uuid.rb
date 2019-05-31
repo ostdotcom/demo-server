@@ -9,7 +9,7 @@ module CacheManagement
     def fetch_from_db(cache_miss_uuids)
       data_to_cache = ::TokenUser.where(uuid: cache_miss_uuids).select([:id, :uuid]).inject({}) do |data, obj|
         data[obj.uuid] = {
-          id: id
+          id: obj.id
         }
         data
       end
