@@ -10,18 +10,18 @@ module GlobalConstant
       end
 
       def count_of_users_eligible
-        10
+        100
       end
 
       # This is the percentage of company reserve's current balance, which could be used for grant
       # This amount to be equally divided amount count_of_users_eligible and to be checked against
       # min_bt_grant_amount & max_bt_grant_amount
       def percent_of_balance_to_be_used_for_grant
-        10
+        80
       end
 
       def min_bt_smallest_unit_grant_amount(decimals)
-        BigDecimal.new('1') * smallest_unit_multiplication_factor(decimals)
+        BigDecimal.new('0.01') * smallest_unit_multiplication_factor(decimals)
       end
 
       def max_bt_smallest_unit_grant_amount(decimals)
