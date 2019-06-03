@@ -29,7 +29,7 @@ module AuthenticationManagement
                                          msg: 'Invalid username'
                                      })
       end
-      if @password.blank? || @password.length > 25 || !Validator.is_alphanumeric?(@password)
+      if @password.blank? || @password.length > 25 || !Validator.is_password?(@password)
         param_validation_errors.push({
                                          parameter: 'password',
                                          msg: 'Invalid password'

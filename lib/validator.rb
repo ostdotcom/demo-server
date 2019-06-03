@@ -62,6 +62,12 @@ class Validator
       object.is_a? Array
     end
 
+    # Is Password
+    #
+    def is_password?(object)
+      object =~ /\A[A-Z0-9@#$%!*&]+\z/i
+    end
+
   end
 
 end
