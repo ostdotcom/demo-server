@@ -22,6 +22,13 @@ class Api::TokenUserController < Api::BaseController
     return render_api_response(response)
   end
 
+  # Get user detail of logged in user salts
+  #
+  def logged_in_user_salts
+    response = TokenUserManagement::ForLoggedInUser::GetSalt.new(params).perform()
+    return render_api_response(response)
+  end
+
   # Get user transactions ledger of logged in user
   #
   def logged_in_user_ledger

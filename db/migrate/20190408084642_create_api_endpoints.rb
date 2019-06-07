@@ -7,7 +7,7 @@ class CreateApiEndpoints < ActiveRecord::Migration[5.2]
     end
     add_index :api_endpoints, [:endpoint], unique: true, name: 'uk_1'
 
-    ApiEndpoint.create(endpoint: 'https://api.ost.com/testnet/v2')
+    ApiEndpoint.create(endpoint: 'https://api.ost.com/testnet/v2/')
   end
 
   def down

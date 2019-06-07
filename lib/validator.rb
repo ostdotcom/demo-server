@@ -50,8 +50,22 @@ class Validator
       object =~ /\A#{URI::regexp(['http', 'https'])}\z/i
     end
 
+    # Is Valid Eth Address
+    #
     def is_ethereum_address?(object)
       object =~ /\A0x[a-f0-9]{40}\z/i
+    end
+
+    # Is an array
+    #
+    def is_array?(object)
+      object.is_a? Array
+    end
+
+    # Is Password
+    #
+    def is_password?(object)
+      object =~ /\A[A-Z0-9@#$%!*&]+\z/i
     end
 
   end
