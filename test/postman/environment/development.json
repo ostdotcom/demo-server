@@ -1,0 +1,33 @@
+{
+	"id": "b12bdd42-31d4-42ad-a916-15c1a356cd6b",
+	"name": "Development",
+	"values": [
+		{
+			"key": "API_ROOT_URL",
+			"value": "http://127.0.0.1:3000/demo/api",
+			"description": "",
+			"enabled": true
+		},
+		{
+			"key": "URL_ID",
+			"value": "7d1b32962409e8b24f09245bc44c51b3c7fe590377402620cf30fe5a4ffc553b",
+			"description": "",
+			"enabled": true
+		},
+		{
+			"key": "TOKEN_ID",
+			"value": "1003",
+			"description": "",
+			"enabled": true
+		},
+		{
+			"key": "TOKEN_USER_ID",
+			"value": "1",
+			"description": "",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2019-04-10T10:30:34.264Z",
+	"_postman_exported_using": "Postman/7.0.7"
+}

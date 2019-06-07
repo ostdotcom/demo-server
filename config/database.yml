@@ -1,0 +1,11 @@
+<%= Rails.env %>:
+  adapter: mysql2
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 6000
+  encoding: utf8
+  collation: utf8_unicode_ci
+  reconnect: true
+  host: <%= ENV['DEMO_MYSQL_HOST']%>
+  username: <%= ENV['DEMO_MYSQL_USER']%>
+  password: <%= ENV['DEMO_MYSQL_PASSWORD']%>
+  database: <%= ENV['DEMO_MYSQL_DB']%>

@@ -1,0 +1,162 @@
+{
+	"info": {
+		"_postman_id": "0d98a186-05b4-4320-b9be-9d350fac0fc6",
+		"name": "Token Manamgent",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "P103",
+							"type": "text"
+						},
+						{
+							"key": "symbol",
+							"value": "P103",
+							"type": "text"
+						},
+						{
+							"key": "pc_token_holder_uuid",
+							"value": "a7d58385-de10-42e3-ad68-7a9743c750c7",
+							"type": "text"
+						},
+						{
+							"key": "ost_token_id",
+							"value": "1003",
+							"type": "text"
+						},
+						{
+							"key": "api_key",
+							"value": "3c13d535d8908a56771dd0fdc0c72275",
+							"type": "text"
+						},
+						{
+							"key": "api_secret",
+							"value": "3e82f26a06a0f475e6500b3a5a53383c56f416abf37fdcb80adaf1a9690e18da",
+							"type": "text"
+						},
+						{
+							"key": "api_endpoint",
+							"value": "http://127.0.0.1:7001/testnet/v2/",
+							"type": "text"
+						},
+						{
+							"key": "url_id",
+							"value": "7d1b32962409e8b24f09245bc44c51b3c7fe590377402620cf30fe5a4ffc553b",
+							"type": "text"
+						},
+						{
+							"key": "conversion_factor",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "chain_id",
+							"value": "2000",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_ROOT_URL}}/setup/create-token",
+					"host": [
+						"{{API_ROOT_URL}}"
+					],
+					"path": [
+						"setup",
+						"create-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "ost_token_id",
+							"value": "1003",
+							"type": "text"
+						},
+						{
+							"key": "api_key",
+							"value": "b82a7d7c25340a6e8924d57eeef3bdd4",
+							"type": "text"
+						},
+						{
+							"key": "api_secret",
+							"value": "03014c6ca149775880cce78cf289712ae0fe040edffa0276c5477f477b14cb6c",
+							"type": "text"
+						},
+						{
+							"key": "api_endpoint",
+							"value": "http://127.0.0.1:7001/testnet/v2/",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_ROOT_URL}}/setup/update-token",
+					"host": [
+						"{{API_ROOT_URL}}"
+					],
+					"path": [
+						"setup",
+						"update-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{API_ROOT_URL}}/{{TOKEN_ID}}/{{URL_ID}}/token",
+					"host": [
+						"{{API_ROOT_URL}}"
+					],
+					"path": [
+						"{{TOKEN_ID}}",
+						"{{URL_ID}}",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
