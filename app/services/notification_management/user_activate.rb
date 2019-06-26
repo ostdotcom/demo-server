@@ -11,7 +11,7 @@ module NotificationManagement
 
       @token_secure = nil
       @api_endpoint = nil
-      @user_data_from_ost = nil
+      @user_data_from_ost = params[:user_data_from_ost]
       @rule_address_from_ost = nil
       @bt_grant_amount_in_wei = nil
       @ost_api_helper = nil
@@ -23,17 +23,19 @@ module NotificationManagement
       r = validate_params
       return r unless r[:success]
 
-      r = fetch_token_secure
-      return r unless r[:success]
+      unless @user_data_from_ost.present?
+        r = fetch_token_secure
+        return r unless r[:success]
 
-      r = fetch_api_endpoint
-      return r unless r[:success]
+        r = fetch_api_endpoint
+        return r unless r[:success]
 
-      r = set_ost_api_helper
-      return r unless r[:success]
+        r = set_ost_api_helper
+        return r unless r[:success]
 
-      r = fetch_user_from_ost
-      return r unless r[:success]
+        r = fetch_user_from_ost
+        return r unless r[:success]
+      end
 
       r = check_eligibility_and_grant_bt
       unless r[:success]
@@ -120,10 +122,10 @@ module NotificationManagement
     def update_token_user
       begin
         token_user_obj = ::TokenUser.where(id: @token_user[:id]).first
-        token_user_obj.token_holder_address = @user_data_from_ost[:token_holder_address]
-        token_user_obj.device_manager_address = @user_data_from_ost[:device_manager_address]
-        token_user_obj.recovery_address = @user_data_from_ost[:recovery_address]
-        token_user_obj.ost_user_status = @user_data_from_ost[:status]
+        token_user_obj.token_holder_address = @user_data_from_ost["token_holder_address"]
+        token_user_obj.device_manager_address = @user_data_from_ost["device_manager_address"]
+        token_user_obj.recovery_address = @user_data_from_ost["recovery_address"]
+        token_user_obj.ost_user_status = @user_data_from_ost["status"]
         token_user_obj.ost_activation_ts = Time.now.to_i
         token_user_obj.save! if token_user_obj.changed?
       rescue => e
