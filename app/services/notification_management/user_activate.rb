@@ -124,6 +124,7 @@ module NotificationManagement
         token_user_obj.device_manager_address = @user_data_from_ost[:device_manager_address]
         token_user_obj.recovery_address = @user_data_from_ost[:recovery_address]
         token_user_obj.ost_user_status = @user_data_from_ost[:status]
+        token_user_obj.ost_activation_ts = Time.now.to_i
         token_user_obj.save! if token_user_obj.changed?
       rescue => e
         Rails.logger.error("update_token_user exception: #{e.message}")

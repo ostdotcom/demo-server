@@ -9,6 +9,10 @@ Rails.application.routes.draw do
     match 'update-token' => :update, via: :POST
   end
 
+  scope 'demo/api/ost-event', controller: 'api/event', :format => false do
+    match '' => :ost_event, via: :POST
+  end
+
   scope 'demo/api/:ost_token_id/:url_id', controller: 'api/authentication', :format => false do
     match 'signup' => :signup,  via: :POST
     match 'login' => :login, via: :POST
