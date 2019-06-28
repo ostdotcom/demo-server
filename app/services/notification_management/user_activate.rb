@@ -23,16 +23,16 @@ module NotificationManagement
       r = validate_params
       return r unless r[:success]
 
+      r = fetch_token_secure
+      return r unless r[:success]
+
+      r = fetch_api_endpoint
+      return r unless r[:success]
+
+      r = set_ost_api_helper
+      return r unless r[:success]
+
       unless @user_data_from_ost.present?
-        r = fetch_token_secure
-        return r unless r[:success]
-
-        r = fetch_api_endpoint
-        return r unless r[:success]
-
-        r = set_ost_api_helper
-        return r unless r[:success]
-
         r = fetch_user_from_ost
         return r unless r[:success]
       end

@@ -4,9 +4,10 @@ Rails.application.routes.draw do
     get '/health-checker' => :health_checker
   end
 
-  scope 'demo/api/setup', controller: 'setup/token', :format => false do
-    match 'create-token' => :create, via: :POST
-    match 'update-token' => :update, via: :POST
+  scope 'demo/api', controller: 'setup/token', :format => false do
+    match 'setup/create-token' => :create, via: :POST
+    match 'setup/update-token' => :update, via: :POST
+    match 'token-stats' => :get_token_stats, via: :GET
   end
 
   scope 'demo/api/ost-event', controller: 'api/event', :format => false do

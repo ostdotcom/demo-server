@@ -24,6 +24,8 @@ gem 'dalli', '2.7.9'
 # OST SDK
 gem 'ost-sdk-ruby', '2.0.0'
 
+gem 'jwt', '2.2.1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
