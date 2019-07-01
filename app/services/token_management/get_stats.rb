@@ -8,7 +8,7 @@ module TokenManagement
     #
     def initialize(params)
       @stats_post_ts = params[:stats_post_ts] || (Time.now.beginning_of_day).to_i
-      @api_endpoint_id = ApiEndpoint.endpoint_to_id_map[params[:api_endpoint_id]]
+      @api_endpoint_id = ApiEndpoint.endpoint_to_id_map[params[:api_endpoint]]
     end
 
     # Get stats
@@ -22,22 +22,22 @@ module TokenManagement
       if token_ids.length > 0
         # Fetch all activated users count
         TokenUser.select("id, ost_token_id, count(*) AS total_users").
-            where('ost_activation_ts IS NOT NULL').
+            where('token_id IN (?) AND ost_activation_ts IS NOT NULL', token_ids).
             group(:ost_token_id).all.each{|x| lifetime_user_activated_records[x.ost_token_id] = x.total_users }
 
         # Fetch all activated users after the specified timestamp
         TokenUser.select("id, ost_token_id, count(*) AS total_users").
-            where('ost_activation_ts > ?', @stats_post_ts).
+            where('token_id IN (?) AND ost_activation_ts > ?', token_ids, @stats_post_ts).
             group(:ost_token_id).all.each{|x| user_activated_records_post_ts[x.ost_token_id] = x.total_users }
 
         # Fetch transactions completed of distinct users
         TokenUser.select("id, ost_token_id, count(*) AS total_transactions").
-            where('first_transaction_ts IS NOT NULL').
+            where('token_id IN (?) AND first_transaction_ts IS NOT NULL', token_ids).
             group(:ost_token_id).all.each{|x| lifetime_trx_records[x.ost_token_id] = x.total_transactions }
 
         # Fetch all transactions completed of distinct users after specified timestamp
         TokenUser.select("id, ost_token_id, count(*) AS total_transactions").
-                  where('first_transaction_ts > ?', @stats_post_ts).
+                  where('token_id IN (?) AND first_transaction_ts > ?', token_ids, @stats_post_ts).
                   group(:ost_token_id).all.each{|x| trx_records_post_ts[x.ost_token_id] = x.total_transactions }
       end
 
