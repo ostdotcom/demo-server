@@ -6,7 +6,12 @@ class Api::EventController < Api::BaseController
   #
   def ost_event
     response = OstEvent::Factory.new(request.headers.env, params).perform()
-    return render_api_response(response)
+    if !response[:success]
+      Rails.logger.error("error in API Call: #{response}")
+      response = Result.error("a_c_ec_1", "UNAUTHORISED", "Not allowed to access the endpoint")
+      (render plain: Oj.dump(response, mode: :compat), status: '401') and return
+    end
+    render_api_response(response)
   end
 
 end

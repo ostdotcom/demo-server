@@ -18,10 +18,11 @@ module OstEvent
       return r unless r.success?
 
       if @token_user.present?
-        return Result.error('a_s_oe_ua_2',
-                            'INVALID_SIGNATURE',
-                            'Unrecognized Token or Signature') unless Token.validate_webhook_signature(
-            @token.id, @event_data, @request_headers)
+        if !Token.validate_webhook_signature(@token.id, @event_data, @request_headers)
+          return Result.error('a_s_oe_ua_2',
+                              'INVALID_SIGNATURE',
+                              'Unrecognized Token or Signature')
+        end
 
         return NotificationManagement::UserActivate.new({token_user: @token_user, token: @token,
                                                          user_data_from_ost: @ost_user}).perform

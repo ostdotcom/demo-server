@@ -18,12 +18,10 @@ module OstEvent
       if @events_processors[@event_topic].present?
         @events_processors[@event_topic].new(@event_data, @request_headers).perform
       else
-        return Result.error('a_s_oe_f_1',
+        Result.error('a_s_oe_f_1',
                             'INVALID_REQUEST',
                             'Unrecognized event')
       end
-
-      Result.success({})
     end
 
   end
