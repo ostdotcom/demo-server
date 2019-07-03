@@ -13,6 +13,10 @@ module GlobalConstant
         100
       end
 
+      def unlimited_airdrop_allowed(ost_token_id)
+        ENV['UNLIMITED_AIRDROP_TOKENS'].include?(ost_token_id)
+      end
+
       # This is the percentage of company reserve's current balance, which could be used for grant
       # This amount to be equally divided amount count_of_users_eligible and to be checked against
       # min_bt_grant_amount & max_bt_grant_amount

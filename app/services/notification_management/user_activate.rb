@@ -161,7 +161,8 @@ module NotificationManagement
     #
     def check_user_eligibility
       count = TokenUser.where(token_id: @token_id, ost_user_status: GlobalConstant::User.activated_ost_user_status).count
-      if count > GlobalConstant::Grant.count_of_users_eligible
+      if !GlobalConstant::Grant.unlimited_airdrop_allowed(@token[:ost_token_id]) and
+          count > GlobalConstant::Grant.count_of_users_eligible
         return Result.error('a_s_nm_ua_8', 'INVALID_REQUEST', 'Grant user limit breached')
       end
       Result.success({})
