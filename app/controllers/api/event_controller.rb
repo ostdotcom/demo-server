@@ -5,7 +5,7 @@ class Api::EventController < Api::BaseController
   # Ost event
   #
   def ost_event
-    response = OstEvent::Factory.new(params).perform()
+    response = OstEvent::Factory.new(params, request.headers.env).perform()
     return render_api_response(response)
   end
 

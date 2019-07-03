@@ -2,7 +2,10 @@ module OstEvent
   class TransactionComplete
 
     # Transaction complete event constructor
-    def initialize(event_data)
+    def initialize(event_data, request_headers)
+      @event_data = event_data
+      @request_headers = request_headers
+
       @transaction_data = event_data["transaction"]
 
       @transfers = @transaction_data["transfers"]
@@ -15,8 +18,15 @@ module OstEvent
 
       fetch_token_users
 
-      if @token_users.present?
+      if @token_users.present? and @token_users.map{|x| x.ost_token_id}.uniq.length == 1
+        r = Token.validate_webhook_signature(@token_users[0].token_id, @event_data, @request_headers)
+        return r unless r.success?
+
         update_token_users
+      else
+        return Result.error('a_s_oe_tc_1',
+                            'INVALID_REQUEST',
+                            'Unrecognized Users data')
       end
 
       Result.success({})

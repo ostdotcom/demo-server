@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_26_095628) do
+ActiveRecord::Schema.define(version: 2019_07_03_055749) do
 
   create_table "api_endpoints", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "endpoint", null: false
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 2019_06_26_095628) do
     t.string "url_id", null: false
     t.text "api_key", null: false
     t.text "api_secret", null: false
+    t.text "webhook_secret"
     t.binary "encryption_salt", null: false
     t.string "pc_token_holder_uuid", null: false
     t.integer "chain_id", null: false
