@@ -13,6 +13,10 @@ module GlobalConstant
         @local_cipher_key ||= ENV['DEMO_LOCAL_CIPHER_KEY']
       end
 
+      def kit_secret_key
+        @kit_secret_key ||= ENV['KIT_SECRET_KEY']
+      end
+
     end
 
   end

@@ -74,6 +74,11 @@ module SetupToken
       return encrypt_rsp unless encrypt_rsp[:success]
 
       api_secret_e = encrypt_rsp[:data][:ciphertext_blob]
+      webhook_secret_e = nil
+      if @webhook_secret.present?
+        encrypt_resp = lc.encrypt(@webhook_secret)
+        webhook_secret_e = encrypt_resp[:data][:ciphertext_blob] rescue nil
+      end
 
       begin
         @token_obj = Token.new({
@@ -87,6 +92,7 @@ module SetupToken
                                  api_key: @api_key,
                                  encryption_salt: generate_salt_rsp[:data][:ciphertext_blob],
                                  api_secret: api_secret_e,
+                                 webhook_secret: webhook_secret_e,
                                  pc_token_holder_uuid: @pc_token_holder_uuid,
                                  chain_id: @chain_id
                                })
