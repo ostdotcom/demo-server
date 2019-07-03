@@ -86,4 +86,23 @@ class ApplicationController < ActionController::Base
     )
   end
 
+  # Decrypt jwt
+  #
+  def decrypt_jwt
+    begin
+      decoded_token_data = JWT.decode(
+          params[:token],
+          GlobalConstant::Base.kit_secret_key,
+          true,
+          {:algorithm => 'HS256'}
+      )[0]["data"]
+
+      params[:decoded_token_data] = HashWithIndifferentAccess.new(decoded_token_data)
+    rescue => e
+      # decoding failed
+      response = Result.error("a_c_ac_5", "UNAUTHORISED", "Not allowed to access the endpoint")
+      (render plain: Oj.dump(response, mode: :compat), status: '401') and return
+    end
+  end
+
 end

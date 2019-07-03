@@ -15,6 +15,10 @@ module CacheManagement
         lc_to_decrypt_res = lc_to_decrypt.decrypt(token_data[:api_secret])
         if lc_to_decrypt_res[:success]
           token_data[:api_secret] = lc_to_decrypt_res[:data][:plaintext]
+          if token_data[:webhook_secret].present?
+            webhook_decrypt_res = lc_to_decrypt.decrypt(token_data[:webhook_secret])
+            token_data[:webhook_secret] = webhook_decrypt_res[:data][:plaintext] rescue nil
+          end
         else
           data_cache[id] = {}
         end

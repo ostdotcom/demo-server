@@ -61,6 +61,11 @@ module SetupToken
 
       api_secret_e = encrypt_rsp[:data][:ciphertext_blob]
 
+      if @webhook_secret.present?
+        encrypt_resp = lc.encrypt(@webhook_secret)
+        @token_obj.webhook_secret = encrypt_resp[:data][:ciphertext_blob] rescue nil
+      end
+
       begin
         @token_obj.api_key = @api_key
         @token_obj.api_secret = api_secret_e
