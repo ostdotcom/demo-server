@@ -62,9 +62,7 @@ class Token < ApplicationRecord
 
   def self.validate_webhook_signature(token_id, data, request_headers)
     token_secure = CacheManagement::TokenSecureById.new([token_id]).fetch()[token_id]
-    return Result.error('a_m_t_1',
-                        'INVALID_REQUEST',
-                        'Unrecognized Token') if token_secure.blank? || token_secure[:webhook_secret].blank?
+    return false if token_secure.blank? || token_secure[:webhook_secret].blank?
 
     version = request_headers["HTTP_OST_VERSION"]
     webhook_secret = token_secure[:webhook_secret]
@@ -76,11 +74,9 @@ class Token < ApplicationRecord
     digest = OpenSSL::Digest.new('sha256')
     signature_to_be_verified = OpenSSL::HMAC.hexdigest(digest, webhook_secret, signature_params)
 
-    return Result.error('a_m_t_2',
-                        'INVALID_REQUEST',
-                        'Signature not verified') if signature != signature_to_be_verified
+    return false if signature != signature_to_be_verified
 
-    Result.success({})
+    return true
   end
 
   private

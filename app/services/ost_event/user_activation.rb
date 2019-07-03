@@ -3,8 +3,8 @@ module OstEvent
 
     # User Activation event constructor
     def initialize(event_data, request_headers)
-      @event_data = event_data
-      @ost_user = event_data["user"]
+      @event_data = event_data["event"]
+      @ost_user = event_data["data"]["user"]
       @request_headers = request_headers
 
       @token_user = nil
@@ -18,8 +18,10 @@ module OstEvent
       return r unless r.success?
 
       if @token_user.present?
-        r = Token.validate_webhook_signature(@token.id, @event_data, @request_headers)
-        return r unless r.success?
+        return Result.error('a_s_oe_ua_2',
+                            'INVALID_SIGNATURE',
+                            'Unrecognized Token or Signature') unless Token.validate_webhook_signature(
+            @token.id, @event_data, @request_headers)
 
         return NotificationManagement::UserActivate.new({token_user: @token_user, token: @token,
                                                          user_data_from_ost: @ost_user}).perform

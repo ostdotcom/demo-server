@@ -3,7 +3,7 @@ module OstEvent
 
     # Ost Event factory constructor
     def initialize(request_headers, params)
-      @event_data = params["data"]
+      @event_data = params
 
       @event_topic = params["topic"]
 
