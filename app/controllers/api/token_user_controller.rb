@@ -50,4 +50,11 @@ class Api::TokenUserController < Api::BaseController
     return render_api_response(response)
   end
 
+  # Set user crashlytics prefernce by app_user_id
+  #
+  def set_crashlytics_preference
+    response = TokenUserManagement::SetCrashlyticsPreference.new(params).perform()
+    return render_api_response(response)
+  end
+
 end

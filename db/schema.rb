@@ -10,13 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_03_055749) do
+ActiveRecord::Schema.define(version: 2019_07_11_091755) do
 
   create_table "api_endpoints", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "endpoint", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["endpoint"], name: "uk_1", unique: true
+  end
+
+  create_table "crashlytics_preferences", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "preference", limit: 1, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "token_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
