@@ -22,7 +22,7 @@ module TokenUserManagement
 
       CrashlyticsPreference.create(user_id: @app_user_id, preference: @preference)
 
-      Result.success({})
+      Result.success({app_user_id: @app_user_id, preference: @preference})
 
     end
 
