@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2019_07_11_091755) do
 
   create_table "crashlytics_preferences", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id", null: false
+    t.string "device_address", null: false
     t.integer "preference", limit: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
