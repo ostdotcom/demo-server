@@ -28,7 +28,7 @@ module TokenUserManagement
         ::CrashlyticsPreference.create(user_id: @app_user_id, preference: @preference,
                                      device_address: @device_address.downcase)
 
-        Result.success({app_user_id: @app_user_id, preference: @preference, device_address: @device_address})
+        Result.success({app_user_id: @app_user_id, preference: @preference.to_i, device_address: @device_address})
 
       end
 
