@@ -1,5 +1,7 @@
 class Transaction < ApplicationRecord
 
+  serialize :transaction_data, JSON
+
   def formated_cache_data
     {
       id: id,
