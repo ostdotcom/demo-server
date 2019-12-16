@@ -1,0 +1,2 @@
+class OstEvent < ApplicationRecord
+end
