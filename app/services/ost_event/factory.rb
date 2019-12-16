@@ -1,7 +1,8 @@
 module OstEvent
+
   class Factory
 
-    # Ost Event factory constructor
+    # Ost event factory constructor.
     def initialize(request_headers, params)
       @event_data = params
 
@@ -13,7 +14,7 @@ module OstEvent
       @request_headers = request_headers
     end
 
-    # Perform action on ost event received
+    # Perform action on ost event received.
     def perform
       if @events_processors[@event_topic].present?
         @events_processors[@event_topic].new(@event_data, @request_headers).perform

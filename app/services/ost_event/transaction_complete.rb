@@ -1,7 +1,7 @@
 module OstEvent
   class TransactionComplete
 
-    # Transaction complete event constructor
+    # Transaction complete event constructor.
     def initialize(event_data, request_headers)
       @event_data = event_data["event"]
       @request_headers = request_headers
@@ -13,7 +13,7 @@ module OstEvent
       @token_users = []
     end
 
-    # Action on receiving transaction complete event
+    # Action on receiving transaction complete event.
     def perform
 
       fetch_token_users

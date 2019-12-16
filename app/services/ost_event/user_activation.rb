@@ -1,7 +1,7 @@
 module OstEvent
   class UserActivation
 
-    # User Activation event constructor
+    # User activation event constructor.
     def initialize(event_data, request_headers)
       @event_data = event_data["event"]
       @ost_user = event_data["data"]["user"]
@@ -11,7 +11,7 @@ module OstEvent
       @token = nil
     end
 
-    # Action on receiving user activation event
+    # Action on receiving user activation event.
     def perform
 
       r = fetch_token_user
@@ -37,7 +37,7 @@ module OstEvent
     def fetch_token_user
       user = TokenUser.where(uuid: @ost_user["id"]).first
 
-      # If token user is known then only update its activation status only if its status is created
+      # If token user is known then only update its activation status only if its status is created.
       if user.present? && user.ost_token_id == @ost_user["token_id"] && user.ost_user_status == 'CREATED'
         @token_user = user
         @token = Token.where(id: @token_user.token_id).first
