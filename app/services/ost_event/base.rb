@@ -13,4 +13,8 @@ class OstEventsBase
     OstEvent.new.update_status(@event_data.id, GlobalConstant::OstEvents.done_status)
   end
 
+  def mark_ost_event_failed
+    OstEvent.new.update_status(@event_data.id, GlobalConstant::OstEvents.failed_status)
+  end
+
 end

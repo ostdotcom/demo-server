@@ -9,7 +9,7 @@ module OstEvent
 
       @event_topic = params["topic"]
       @events_processors = {"users/activation_success" => OstEvent::UserActivation,
-                     "transactions/success" => OstEvent::TransactionComplete}
+                     "transactions/success" => OstEvent::TransactionSuccess}
     end
 
     # Perform action on ost event received.
