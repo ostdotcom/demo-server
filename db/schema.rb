@@ -10,16 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_03_055749) do
+ActiveRecord::Schema.define(version: 2019_12_16_121013) do
 
-  create_table "api_endpoints", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "api_endpoints", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "endpoint", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["endpoint"], name: "uk_1", unique: true
   end
 
-  create_table "token_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "ost_events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+    t.string "event_id", null: false
+    t.integer "status", null: false
+    t.text "event_data", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "uk_1", unique: true
+  end
+
+  create_table "token_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "username", null: false
     t.text "password", null: false
     t.text "user_pin_salt", null: false
@@ -40,7 +49,7 @@ ActiveRecord::Schema.define(version: 2019_07_03_055749) do
     t.index ["uuid"], name: "uk_2", unique: true
   end
 
-  create_table "tokens", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "tokens", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "ost_token_id", null: false
     t.integer "api_endpoint_id", null: false
     t.string "name", null: false
@@ -58,6 +67,24 @@ ActiveRecord::Schema.define(version: 2019_07_03_055749) do
     t.datetime "updated_at", null: false
     t.index ["ost_token_id", "api_endpoint_id"], name: "uk_2", unique: true
     t.index ["url_id"], name: "uk_1", unique: true
+  end
+
+  create_table "transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+    t.string "ost_tx_id", null: false
+    t.integer "status", null: false
+    t.text "transaction_data", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ost_tx_id"], name: "uk_1", unique: true
+  end
+
+  create_table "user_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+    t.integer "token_user_id", null: false
+    t.string "ost_tx_id", null: false
+    t.integer "transaction_ts", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token_user_id", "transaction_ts"], name: "in_1"
   end
 
 end
