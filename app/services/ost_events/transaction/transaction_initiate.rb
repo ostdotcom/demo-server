@@ -54,29 +54,24 @@ module OstEvents
 
       def fetch_token_users
         if @transfers.present? && @transfers.length > 0
-          ost_user_ids = @transfers.map{|x|x["from_user_id"]}
-          @token_users = TokenUser.where(uuid: ost_user_ids).all
+          uuids_set = Set.new([])
+          @transfers.each do |transfer|
+            uuids_set.add(transfer[:from_user_id]) if transfer[:from_user_id].present?
+            uuids_set.add(transfer[:to_user_id]) if transfer[:to_user_id].present?
+          end
+
+          # Convert to array.
+          @uuids_array = uuids_set.to_a
+          @token_users = TokenUser.where(uuid: @uuids_array[0]).all
         end
       end
 
       def create_entry_in_user_transactions
-
-        # Gather all uuids in all the transfers.
-        uuids_set = Set.new([])
-
-        @transfers.each do |transfer|
-          uuids_set.add(transfer[:from_user_id]) if transfer[:from_user_id].present?
-          uuids_set.add(transfer[:to_user_id]) if transfer[:to_user_id].present?
-        end
-
-        # Convert to array.
-        uuids_array = uuids_set.to_a
-
-        token_user_data_by_uuid = CacheManagement::TokenUserByUuid.new(uuids_array).fetch()
+        token_user_data_by_uuid = CacheManagement::TokenUserByUuid.new(@uuids_array).fetch()
 
         # Fetch token user id for the given ost-user-ids.
         token_user_ids = []
-        uuids_array.each do |uuid|
+        @uuids_array.each do |uuid|
           if token_user_data_by_uuid[uuid].present?
             token_user_ids.push(token_user_data_by_uuid[uuid][:id])
           end
@@ -86,8 +81,8 @@ module OstEvents
         token_user_ids.each do |token_user_id|
           UserTransaction.new({
                                 token_user_id: token_user_id,
-                                transaction_id: @transaction_obj.id,
-                                transaction_ts: @transaction_data.updated_timestamp
+                                transaction_id: @transaction_obj[:id],
+                                transaction_ts: @transaction_data[:updated_timestamp]
                               }).save!
         end
       end

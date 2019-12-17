@@ -15,8 +15,8 @@ module OstEvents
 
       def create_entry_in_transactions
         begin
-          @transaction_obj = Transaction.new({
-                                               ost_tx_id: @transaction_data.id,
+          @transaction_obj = ::Transaction.new({
+                                               ost_tx_id: @transaction_data[:id],
                                                status: GlobalConstant::Transactions.pending_status,
                                                transaction_data: @transaction_data
                                              })
