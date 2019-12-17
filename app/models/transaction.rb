@@ -21,14 +21,14 @@ class Transaction < ApplicationRecord
 
   def update_status(ost_tx_id, new_status, transaction_data)
     begin
-      # Try to update status.
-      Transaction.where(ost_tx_id: ost_tx_id).update_all(status: new_status, transaction_data: transaction_data)
+      # Try to update status only if existing status is pending.
+      Transaction.where(ost_tx_id: ost_tx_id, status: GlobalConstant::Transactions.pending_status).update_all(status: new_status, transaction_data: transaction_data)
     rescue
       # If status update fails, try to create a new entry.
       begin
         transaction_obj = Transaction.new({
                                             ost_tx_id: ost_tx_id,
-                                            status: GlobalConstant::Transactions.pending_status,
+                                            status: new_status,
                                             transaction_data: transaction_data
                                           })
 

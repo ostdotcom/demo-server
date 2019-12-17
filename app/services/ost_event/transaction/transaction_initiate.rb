@@ -22,6 +22,9 @@ module OstEvent
         if Token.validate_webhook_signature(@token_users[0].token_id, @event_data, @request_headers)
           # Create an entry in transactions table.
           create_entry_in_transactions
+
+          # Create entry in user transactions table.
+          create_entry_in_user_transactions
         else
           # Mark ost event as failed.
           mark_ost_event_failed
@@ -53,6 +56,14 @@ module OstEvent
         ost_user_ids = @transfers.map{|x|x["from_user_id"]}
         @token_users = TokenUser.where(uuid: ost_user_ids).all
       end
+    end
+
+    def create_entry_in_user_transactions
+      UserTransaction.new({
+        token_user_id: @token_users[0].id,
+        transaction_id: @transaction_obj.id,
+        transaction_ts: @transaction_data.updated_timestamp
+                          }).save!
     end
 
   end

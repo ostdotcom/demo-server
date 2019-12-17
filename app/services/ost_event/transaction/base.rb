@@ -8,13 +8,18 @@ class OstEventsTransactionsBase < OstEventsBase
 
   def create_entry_in_transactions
 
-    @transaction_obj = Transaction.new({
-      ost_tx_id: @transaction_data.id,
-      status: GlobalConstant::Transactions.pending_status,
-      transaction_data: @transaction_data
-                    })
+    begin
+      @transaction_obj = Transaction.new({
+                                           ost_tx_id: @transaction_data.id,
+                                           status: GlobalConstant::Transactions.pending_status,
+                                           transaction_data: @transaction_data
+                                         })
 
-    @transaction_obj.save!
+      @transaction_obj.save!
+
+    rescue => e
+      Rails.logger.info("Transaction entry already exists. Transaction: #{@transaction_data}. Error: #{e}")
+    end
 
   end
 
