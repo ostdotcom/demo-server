@@ -1,11 +1,12 @@
 module OstEvent
-  class UserActivation
+
+  class UserActivation < OstEventsBase
 
     # User activation event constructor.
     def initialize(event_data, request_headers)
-      @event_data = event_data["event"]
+      super
+
       @ost_user = event_data["data"]["user"]
-      @request_headers = request_headers
 
       @token_user = nil
       @token = nil
@@ -13,19 +14,19 @@ module OstEvent
 
     # Action on receiving user activation event.
     def perform
+      create_entry_in_ost_events
 
       r = fetch_token_user
       return r unless r.success?
 
       if @token_user.present?
-        if !Token.validate_webhook_signature(@token.id, @event_data, @request_headers)
+        if Token.validate_webhook_signature(@token.id, @event_data, @request_headers)
+          return NotificationManagement::UserActivate.new({token_user: @token_user, token: @token,
+                                                           user_data_from_ost: @ost_user}).perform
+        end
           return Result.error('a_s_oe_ua_2',
                               'INVALID_SIGNATURE',
                               'Unrecognized Token or Signature')
-        end
-
-        return NotificationManagement::UserActivate.new({token_user: @token_user, token: @token,
-                                                         user_data_from_ost: @ost_user}).perform
       end
 
       Result.success({})

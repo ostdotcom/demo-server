@@ -4,14 +4,12 @@ module OstEvent
 
     # Ost event factory constructor.
     def initialize(request_headers, params)
+      @request_headers = request_headers
       @event_data = params
 
       @event_topic = params["topic"]
-
       @events_processors = {"users/activation_success" => OstEvent::UserActivation,
                      "transactions/success" => OstEvent::TransactionComplete}
-
-      @request_headers = request_headers
     end
 
     # Perform action on ost event received.
