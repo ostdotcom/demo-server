@@ -59,11 +59,36 @@ module OstEvent
     end
 
     def create_entry_in_user_transactions
-      UserTransaction.new({
-        token_user_id: @token_users[0].id,
-        transaction_id: @transaction_obj.id,
-        transaction_ts: @transaction_data.updated_timestamp
-                          }).save!
+
+      # Gather all uuids in all the transfers.
+      uuids_set = Set.new([])
+
+      @transfers.each do |transfer|
+        uuids_set.add(transfer[:from_user_id]) if transfer[:from_user_id].present?
+        uuids_set.add(transfer[:to_user_id]) if transfer[:to_user_id].present?
+      end
+
+      # Convert to array.
+      uuids_array = uuids_set.to_a
+
+      token_user_data_by_uuid = CacheManagement::TokenUserByUuid.new(uuids_array).fetch()
+
+      # Fetch token user id for the given ost-user-ids.
+      token_user_ids = []
+      uuids_array.each do |uuid|
+        if token_user_data_by_uuid[uuid].present?
+          token_user_ids.push(token_user_data_by_uuid[uuid][:id])
+        end
+      end
+
+      # Create entries for all the involved users.
+      token_user_ids.each do |token_user_id|
+        UserTransaction.new({
+                              token_user_id: token_user_id,
+                              transaction_id: @transaction_obj.id,
+                              transaction_ts: @transaction_data.updated_timestamp
+                            }).save!
+      end
     end
 
   end
