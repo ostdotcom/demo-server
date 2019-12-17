@@ -9,6 +9,7 @@ module OstEvent
 
       @event_topic = params["topic"]
       @events_processors = {"users/activation_success" => OstEvent::UserActivation,
+                            "transactions/initiate" => OstEvent::TransactionInitiate,
                             "transactions/success" => OstEvent::TransactionSuccess,
                             "transactions/failure" => OstEvent::TransactionFailure}
     end
@@ -29,7 +30,7 @@ module OstEvent
       else
         Result.error('a_s_oe_f_1',
                             'INVALID_REQUEST',
-                            'Unrecognized event')
+                            'Unrecognized event.')
       end
     end
 

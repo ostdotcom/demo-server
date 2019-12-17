@@ -8,11 +8,13 @@ class OstEventsTransactionsBase < OstEventsBase
 
   def create_entry_in_transactions
 
-    Transaction.new({
+    @transaction_obj = Transaction.new({
       ost_tx_id: @transaction_data.id,
       status: GlobalConstant::Transactions.pending_status,
       transaction_data: @transaction_data
                     })
+
+    @transaction_obj.save!
 
   end
 
