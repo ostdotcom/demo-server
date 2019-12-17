@@ -1,35 +1,27 @@
-module OstEvent
+class OstEventsTransactionsBase < OstEventsBase
 
-  module Transaction
+  def initialize(event_data, request_headers)
+    super
 
-    class OstEventsTransactionsBase < OstEventsBase
+    @transaction_data = event_data["data"]["transaction"]
+  end
 
-      def initialize(event_data, request_headers)
-        super
+  def create_entry_in_transactions
 
-        @transaction_data = event_data["data"]["transaction"]
-      end
+    Transaction.new({
+      ost_tx_id: @transaction_data.id,
+      status: GlobalConstant::Transactions.pending_status,
+      transaction_data: @transaction_data
+                    })
 
-      def create_entry_in_transactions
+  end
 
-        Transaction.new({
-          ost_tx_id: @transaction_data.id,
-          status: GlobalConstant::Transactions.pending_status,
-          transaction_data: @transaction_data
-                        })
+  def mark_transaction_done
+    Transaction.new.update_status(@transaction_data.id, GlobalConstant::Transactions.done_status)
+  end
 
-      end
-
-      def mark_transaction_done
-        Transaction.new.update_status(@transaction_data.id, GlobalConstant::Transactions.done_status)
-      end
-
-      def mark_transaction_failed
-        Transaction.new.update_status(@transaction_data.id, GlobalConstant::Transactions.failed_status)
-      end
-
-    end
-
+  def mark_transaction_failed
+    Transaction.new.update_status(@transaction_data.id, GlobalConstant::Transactions.failed_status)
   end
 
 end
