@@ -42,7 +42,7 @@ module OstEvent
       mark_ost_event_done
 
       # Mark transaction as done.
-      mark_transaction_done
+      mark_transaction_done(@event_data)
 
       Result.success({})
 

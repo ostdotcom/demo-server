@@ -19,8 +19,26 @@ class Transaction < ApplicationRecord
     }
   end
 
-  def update_status(ost_tx_id, new_status)
-    Transaction.where(ost_tx_id: ost_tx_id).update_all(status: new_status)
+  def update_status(ost_tx_id, new_status, transaction_data)
+    begin
+      # Try to update status.
+      Transaction.where(ost_tx_id: ost_tx_id).update_all(status: new_status)
+    rescue
+      # If status update fails, try to create a new entry.
+      begin
+        transaction_obj = Transaction.new({
+                                            ost_tx_id: ost_tx_id,
+                                            status: GlobalConstant::Transactions.pending_status,
+                                            transaction_data: transaction_data
+                                          })
+
+        transaction_obj.save!
+      rescue => e
+        Rails.logger.error("Transaction creation error:: #{e}")
+      end
+
+    end
+
   end
 
 end

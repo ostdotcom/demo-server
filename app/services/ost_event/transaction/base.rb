@@ -18,12 +18,12 @@ class OstEventsTransactionsBase < OstEventsBase
 
   end
 
-  def mark_transaction_done
-    Transaction.new.update_status(@transaction_data.id, GlobalConstant::Transactions.done_status)
+  def mark_transaction_done(transaction_data)
+    Transaction.new.update_status(@transaction_data.id, GlobalConstant::Transactions.done_status, transaction_data)
   end
 
-  def mark_transaction_failed
-    Transaction.new.update_status(@transaction_data.id, GlobalConstant::Transactions.failed_status)
+  def mark_transaction_failed(transaction_data)
+    Transaction.new.update_status(@transaction_data.id, GlobalConstant::Transactions.failed_status, transaction_data)
   end
 
 end
