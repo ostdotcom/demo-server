@@ -6,7 +6,7 @@ module OstEvents
     def initialize(event_data, request_headers)
       super
 
-      @ost_user = event_data["data"]["user"]
+      @ost_user = event_data[:data][:user]
 
       @token_user = nil
       @token = nil
@@ -28,9 +28,9 @@ module OstEvents
           # Mark ost event as failed.
           mark_ost_event_failed
 
-          return Result.error('a_s_oe_ua_2',
+          return Result.error('a_s_oe_ua_1',
                               'INVALID_SIGNATURE',
-                              'Unrecognized Token or Signature')
+                              'Unrecognized token or signature.')
       end
 
       # Mark ost event as done.
@@ -43,19 +43,19 @@ module OstEvents
     private
 
     def fetch_token_user
-      user = TokenUser.where(uuid: @ost_user["id"]).first
+      user = TokenUser.where(uuid: @ost_user[:id]).first
 
       # If token user is known then only update its activation status only if its status is created.
-      if user.present? && user.ost_token_id == @ost_user["token_id"] && user.ost_user_status == 'CREATED'
+      if user.present? && user.ost_token_id == @ost_user[:token_id] && user.ost_user_status == 'CREATED'
         @token_user = user
         @token = Token.where(id: @token_user.token_id).first
       else
         # Mark ost event as failed.
         mark_ost_event_failed
 
-        return Result.error('a_s_oe_ua_1',
+        return Result.error('a_s_oe_ua_2',
                             'INVALID_REQUEST',
-                            'Unrecognized User data')
+                            'Unrecognized user data.')
       end
 
       Result.success({})
