@@ -20,4 +20,8 @@ class OstEvent < ApplicationRecord
     }
   end
 
+  def update_status(event_id, new_status)
+    OstEvent.where(event_id: event_id).update_all(status: new_status)
+  end
+
 end

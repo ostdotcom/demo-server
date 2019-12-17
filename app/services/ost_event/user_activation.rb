@@ -14,7 +14,8 @@ module OstEvent
 
     # Action on receiving user activation event.
     def perform
-      create_entry_in_ost_events
+      # Mark ost event as started.
+      mark_ost_event_started
 
       r = fetch_token_user
       return r unless r.success?
@@ -28,6 +29,9 @@ module OstEvent
                               'INVALID_SIGNATURE',
                               'Unrecognized Token or Signature')
       end
+
+      # Mark ost event as done.
+      mark_ost_event_done
 
       Result.success({})
 

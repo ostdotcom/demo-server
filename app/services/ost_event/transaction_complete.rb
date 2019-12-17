@@ -14,7 +14,8 @@ module OstEvent
 
     # Action on receiving transaction complete event.
     def perform
-      create_entry_in_ost_events
+      # Mark ost event as started.
+      mark_ost_event_started
 
       fetch_token_users
 
@@ -31,6 +32,9 @@ module OstEvent
                             'INVALID_REQUEST',
                             'Unrecognized Users data')
       end
+
+      # Mark ost event as done.
+      mark_ost_event_done
 
       Result.success({})
 
