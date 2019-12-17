@@ -19,4 +19,8 @@ class Transaction < ApplicationRecord
     }
   end
 
+  def update_status(ost_tx_id, new_status)
+    Transaction.where(ost_tx_id: ost_tx_id).update_all(status: new_status)
+  end
+
 end

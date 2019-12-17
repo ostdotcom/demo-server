@@ -1,12 +1,11 @@
 module OstEvent
 
-  class TransactionComplete < OstEventsBase
+  class TransactionComplete < OstEventsTransactionsBase
 
     # Transaction complete event constructor.
     def initialize(event_data, request_headers)
       super
 
-      @transaction_data = event_data["data"]["transaction"]
       @transfers = @transaction_data["transfers"]
 
       @token_users = []
