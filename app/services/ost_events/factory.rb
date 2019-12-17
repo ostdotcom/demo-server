@@ -1,4 +1,4 @@
-module OstEvent
+module OstEvents
 
   class Factory
 
@@ -8,10 +8,10 @@ module OstEvent
       @event_data = params
 
       @event_topic = params["topic"]
-      @events_processors = {"users/activation_success" => OstEvent::UserActivation,
-                            "transactions/initiate" => OstEvent::TransactionInitiate,
-                            "transactions/success" => OstEvent::TransactionSuccess,
-                            "transactions/failure" => OstEvent::TransactionFailure}
+      @events_processors = {"users/activation_success" => OstEvents::UserActivation,
+                            "transactions/initiate" => OstEvents::Transaction::TransactionInitiate,
+                            "transactions/success" => OstEvents::Transaction::TransactionSuccess,
+                            "transactions/failure" => OstEvents::Transaction::TransactionFailure}
     end
 
     # Perform action on ost event received.

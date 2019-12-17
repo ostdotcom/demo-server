@@ -1,6 +1,6 @@
-module OstEvent
+module OstEvents
 
-  class UserActivation < OstEventsBase
+  class UserActivation < ::OstEvents::Base
 
     # User activation event constructor.
     def initialize(event_data, request_headers)
