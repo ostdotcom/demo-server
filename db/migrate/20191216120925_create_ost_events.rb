@@ -2,7 +2,7 @@ class CreateOstEvents < ActiveRecord::Migration[5.2]
   def change
     create_table :ost_events do |t|
       t.column :event_id, :string, null: false
-      t.column :status, :integer, null: false
+      t.column :status, :integer, limit:1, null: false
       t.column :event_data, :text, null: false
       t.timestamps
     end
