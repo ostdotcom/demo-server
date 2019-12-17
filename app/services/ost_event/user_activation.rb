@@ -25,6 +25,9 @@ module OstEvent
           return NotificationManagement::UserActivate.new({token_user: @token_user, token: @token,
                                                            user_data_from_ost: @ost_user}).perform
         end
+          # Mark ost event as failed.
+          mark_ost_event_failed
+
           return Result.error('a_s_oe_ua_2',
                               'INVALID_SIGNATURE',
                               'Unrecognized Token or Signature')
@@ -47,6 +50,9 @@ module OstEvent
         @token_user = user
         @token = Token.where(id: @token_user.token_id).first
       else
+        # Mark ost event as failed.
+        mark_ost_event_failed
+
         return Result.error('a_s_oe_ua_1',
                             'INVALID_REQUEST',
                             'Unrecognized User data')
