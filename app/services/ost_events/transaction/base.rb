@@ -7,7 +7,10 @@ module OstEvents
       def initialize(event_data, request_headers)
         super
 
-        @transaction_data = event_data["data"]["transaction"]
+        @transaction_data = event_data[:data][:transaction]
+        @transfers = @transaction_data[:transfers]
+
+        @token_users = []
       end
 
       def create_entry_in_transactions

@@ -7,10 +7,6 @@ module OstEvents
       # Transaction initiate event constructor.
       def initialize(event_data, request_headers)
         super
-
-        @transfers = @transaction_data["transfers"]
-
-        @token_users = []
       end
 
       # Action on receiving transaction initiate event.

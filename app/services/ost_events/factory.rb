@@ -7,7 +7,7 @@ module OstEvents
       @request_headers = request_headers
       @event_data = params
 
-      @event_topic = params["topic"]
+      @event_topic = params[:topic]
       @events_processors = {"users/activation_success" => OstEvents::UserActivation,
                             "transactions/initiate" => OstEvents::Transaction::TransactionInitiate,
                             "transactions/success" => OstEvents::Transaction::TransactionSuccess,
@@ -19,7 +19,7 @@ module OstEvents
       if @events_processors[@event_topic].present?
         # Create entry in ost_events table.
         @ost_event_obj = OstEvent.new({
-                                        event_id: @event_data.id,
+                                        event_id: @event_data[:id],
                                         status: GlobalConstant::OstEvents.pending_status,
                                         event_data: @event_data
                                       })
