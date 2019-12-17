@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 2019_12_16_121013) do
 
   create_table "ost_events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "event_id", null: false
-    t.integer "status", null: false
+    t.integer "status", limit: 1, null: false
     t.text "event_data", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 2019_12_16_121013) do
 
   create_table "transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "ost_tx_id", null: false
-    t.integer "status", null: false
+    t.integer "status", limit: 1, null: false
     t.text "transaction_data", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -79,8 +79,8 @@ ActiveRecord::Schema.define(version: 2019_12_16_121013) do
   end
 
   create_table "user_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "token_user_id", null: false
-    t.string "ost_tx_id", null: false
+    t.bigint "token_user_id", null: false
+    t.bigint "transaction_id", null: false
     t.integer "transaction_ts", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

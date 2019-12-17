@@ -2,7 +2,7 @@ class Transaction < ApplicationRecord
 
   enum status: {
     GlobalConstant::Transactions.pending_status => 1,
-    GlobalConstant::Transactions.started_status => 2,
+    GlobalConstant::Transactions.done_status => 2,
     GlobalConstant::Transactions.failed_status => 3
   }
 
