@@ -18,7 +18,7 @@ module OstEvents
       mark_ost_event_started
 
       r = fetch_token_user
-      return r unless r.success?
+      return r unless r[:success]
 
       if @token_user.present?
         if Token.validate_webhook_signature(@token.id, @event_data, @request_headers)
