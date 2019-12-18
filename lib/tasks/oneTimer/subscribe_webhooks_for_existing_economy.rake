@@ -5,7 +5,7 @@ namespace :one_timers do
   task :subscribe_webhooks_for_existing_economy => :environment do
 
     @ost_token_id_to_tokens_hash = {}
-    Token.all.each do |token|
+    Token.where(api_endpoint_id: 4).all.each do |token|
       token_id = token.id
       ost_token_id = token.ost_token_id
       api_endpoint_id = token.api_endpoint_id
@@ -27,9 +27,15 @@ namespace :one_timers do
                                            api_secret: data[:api_secret],
                                            api_endpoint: data[:api_endpoint]
                                          })
-      @ost_api_helper.create_webhooks({
-                                        topics: GlobalConstant::OstEvents.webhook_topics,
-                                        url: GlobalConstant::OstEvents.webhook_subscription_endpoint})
+      begin
+        @ost_api_helper.create_webhooks({
+                                          topics: GlobalConstant::OstEvents.webhook_topics,
+                                          url: GlobalConstant::OstEvents.webhook_subscription_endpoint})
+      rescue Exception => e
+        p "Exception........ #{e.inspect}"
+        next
+      end
+
     end
 
     puts "Rake task completed successfully."
