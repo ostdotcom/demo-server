@@ -77,6 +77,13 @@ class OstApiHelper
     handle_ost_response(response)
   end
 
+  # Create new webhooks.
+  #
+  def create_webhooks(params)
+    response = webhooks_service.create(params)
+    handle_ost_response(response)
+  end
+
   private
 
   # Object to call Tokens Service related endpoints
@@ -119,6 +126,12 @@ class OstApiHelper
   #
   def balances_service
     @balances_service ||= @sdk_obj.services.balance
+  end
+
+  # Object to call Webhooks Service related endpoints
+  #
+  def webhooks_service
+    @bwebhooks_service ||= @sdk_obj.services.webhooks
   end
 
   # handle OST response

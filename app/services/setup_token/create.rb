@@ -21,6 +21,9 @@ module SetupToken
       r = validate_params
       return r unless r[:success]
 
+      r = subscribe_webhooks
+      return r unless r[:success]
+
       r = create_token
       return r unless r[:success]
 
@@ -60,6 +63,15 @@ module SetupToken
       return r unless r[:success]
 
       Result.success({})
+    end
+
+    def subscribe_webhooks
+      r = set_ost_api_helper
+      return r unless r[:success]
+
+      @ost_api_helper.create_webhooks({
+                                        topics: GlobalConstant::OstEvents.webhook_topics,
+                                        url: GlobalConstant::OstEvents.webhook_subscription_endpoint})
     end
 
 
@@ -112,6 +124,14 @@ module SetupToken
     #
     def generate_salt
       Kms.new.generate_data_key
+    end
+
+    # Set OST API Helper Object
+    #
+    def set_ost_api_helper
+      @ost_api_helper = OstApiHelper.new({api_key: @api_key,
+                                          api_secret: @api_secret, api_endpoint: @api_endpoint})
+      Result.success({})
     end
 
   end

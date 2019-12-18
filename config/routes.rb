@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     match 'token-stats' => :get_token_stats, via: :GET
   end
 
-  scope 'demo/api/ost-event', controller: 'api/event', :format => false do
+  scope 'demo/api/ost-wallet-test-webhook', controller: 'api/event', :format => false do
     match '' => :ost_event, via: :POST
   end
 
