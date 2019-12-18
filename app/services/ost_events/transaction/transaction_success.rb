@@ -23,8 +23,6 @@ module OstEvents
 
             # Mark transaction as done.
             mark_transaction_done(@transaction_data)
-
-
           else
             # Mark ost event as failed.
             mark_ost_event_failed
