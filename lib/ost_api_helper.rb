@@ -84,7 +84,9 @@ class OstApiHelper
     handle_ost_response(response)
   end
 
-  def delete_webhooks(params)
+  # Delete existing webhook.
+  #
+  def delete_webhook(params)
     response = webhooks_service.delete(params)
     handle_ost_response(response)
   end
