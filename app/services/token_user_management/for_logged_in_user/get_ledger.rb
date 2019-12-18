@@ -111,9 +111,10 @@ module TokenUserManagement
           user_transactions.each {|ut|
             last_user_transaction_id = ut.id
             @transaction_ids << ut.transaction_id
-            @token_user_ids << ut.token_user_id
           }
           @pagination_identifier = {last_user_transaction_id: last_user_transaction_id}
+
+          @token_user_ids = UserTransaction.where(transaction_id: @transaction_ids).map {|all_ut| all_ut.token_user_id}
         else
           @pagination_identifier = nil
         end
