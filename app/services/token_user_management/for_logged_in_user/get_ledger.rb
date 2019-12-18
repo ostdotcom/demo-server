@@ -10,7 +10,7 @@ module TokenUserManagement
         @token = params[:token]
         @token_id = @token[:id]
         @token_user = params[:token_user]
-        @pagination_identifier = params[:pagination_identifier] || nil
+        @pagination_identifier = Oj.load(params[:pagination_identifier], {symbol_keys: true}) rescue nil
 
         @token_secure = nil
         @api_endpoint = nil
@@ -52,7 +52,7 @@ module TokenUserManagement
       # validate pagination identifier
       #
       def validate_pagination_identifier
-        if @pagination_identifier.blank? || Validator.is_alphanumeric_equal?(@pagination_identifier)
+        if @pagination_identifier.blank? || Validator.is_integer?(@pagination_identifier[:last_user_transaction_id])
           Result.success({})
         else
           Result.error('a_s_tum_fliu_gl_1', 'INVALID_REQUEST', 'Invalid pagination_identifier')
