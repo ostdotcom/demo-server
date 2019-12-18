@@ -38,6 +38,8 @@ Rails.application.routes.draw do
   scope 'demo/api/:ost_token_id/:url_id/users/:app_user_id', controller: 'api/token_user', :format => false do
     match 'detail' => :get_detail, via: :GET
     match 'balance' => :get_balance, via: :GET
+    match 'set-preference' => :set_crashlytics_preference, via: :POST
+    match 'get-preference' => :get_crashlytics_preference, via: :GET
   end
 
   scope 'demo/api/:ost_token_id/:url_id/devices', controller: 'api/device', :format => false do

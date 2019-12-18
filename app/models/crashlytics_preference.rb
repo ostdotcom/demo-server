@@ -1,0 +1,2 @@
+class CrashlyticsPreference < ApplicationRecord
+end
