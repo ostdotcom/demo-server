@@ -18,7 +18,7 @@ namespace :one_timers do
 
     tx_id = 1000000
 
-    Token.where(id: 195).all.each {|token_obj|
+    Token.all.each {|token_obj|
 
       p "token-----------------#{token_obj.inspect}"
       token_id = token_obj.id
