@@ -32,7 +32,7 @@ namespace :one_timers do
                                         url: GlobalConstant::OstEvents.webhook_subscription_endpoint})
     end
 
-    puts "subscribe_webhooks_for_existing_economy completed successfully"
+    puts "Rake task completed successfully."
 
   end
 
