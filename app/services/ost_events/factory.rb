@@ -5,9 +5,9 @@ module OstEvents
     # Ost event factory constructor.
     def initialize(request_headers, params)
       @request_headers = request_headers
-      @event_data = params
+      @event_data = Oj.load(params)
 
-      @event_topic = params[:topic]
+      @event_topic = @event_data[:topic]
       @events_processors = {"users/activation_success" => OstEvents::UserActivation,
                             "transactions/initiate" => OstEvents::Transaction::TransactionInitiate,
                             "transactions/success" => OstEvents::Transaction::TransactionSuccess,

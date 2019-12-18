@@ -5,6 +5,8 @@ class Api::EventController < Api::BaseController
   # Ost event
   #
   def ost_event
+    Rails.logger.info "===params===== #{params}"
+    Rails.logger.info "===request.raw_post()===== #{request.raw_post()}"
     response = OstEvents::Factory.new(request.headers.env, request.raw_post()).perform()
     if !response[:success]
       Rails.logger.error("error in API Call: #{response}")
