@@ -96,26 +96,24 @@ module TokenUserManagement
       # fetch paginated transaction_ids
       #
       def fetch_transaction_ids_list
-        transaction_ts = @pagination_identifier[:last_transaction_ts] rescue Time.now.to_i
+        user_transaction_id = @pagination_identifier[:last_user_transaction_id] if @pagination_identifier.present?
 
-        Rails.logger.info "@token_user-------------#{@token_user}"
-        user_transactions = UserTransaction
-                               .where(token_user_id: @token_user[:id])
-                               .where(['transaction_ts < ?', transaction_ts])
-                               .limit(10)
-                               .order('transaction_ts DESC')
-                               .all
+        user_transactions_obj = UserTransaction.where(token_user_id: @token_user[:id])
+
+        user_transactions_obj.where(['id < ?', user_transaction_id]) if user_transaction_id
+
+        user_transactions = user_transactions_obj.limit(10).order('transaction_ts DESC').all
 
         @transaction_ids, @token_user_ids = [], []
         if user_transactions.present?
-          last_transaction_ts= nil
+          last_user_transaction_id= nil
 
           user_transactions.each {|ut|
-            last_transaction_ts = ut.transaction_ts
+            last_user_transaction_id = ut.id
             @transaction_ids << ut.transaction_id
             @token_user_ids << ut.token_user_id
           }
-          @pagination_identifier = {last_transaction_ts: last_transaction_ts}
+          @pagination_identifier = {last_user_transaction_id: last_user_transaction_id}
         else
           @pagination_identifier = nil
         end
