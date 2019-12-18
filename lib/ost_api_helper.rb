@@ -84,6 +84,11 @@ class OstApiHelper
     handle_ost_response(response)
   end
 
+  def delete_webhooks(params)
+    response = webhooks_service.delete(params)
+    handle_ost_response(response)
+  end
+
   private
 
   # Object to call Tokens Service related endpoints
