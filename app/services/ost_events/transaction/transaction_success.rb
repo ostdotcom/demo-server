@@ -22,7 +22,7 @@ module OstEvents
             update_token_users
 
             # Mark transaction as done.
-            mark_transaction_done(@event_data)
+            mark_transaction_done(@transaction_data)
 
 
           else

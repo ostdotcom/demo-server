@@ -19,7 +19,7 @@ module OstEvents
         if @token_users.present? and @token_users.map{|x| x.ost_token_id}.uniq.length == 1
           if Token.validate_webhook_signature(@token_users[0].token_id, @ost_raw_body, @request_headers)
             # Mark transaction as failed.
-            mark_transaction_failed(@event_data)
+            mark_transaction_failed(@transaction_data)
           else
             # Mark ost event as failed.
             mark_ost_event_failed
