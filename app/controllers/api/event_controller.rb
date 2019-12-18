@@ -6,7 +6,7 @@ class Api::EventController < Api::BaseController
   #
   def ost_event
     ost_raw_body = request.raw_post()
-    response = OstEvents::Factory.new(request.headers.env, request.raw_post(), ost_raw_body).perform()
+    response = OstEvents::Factory.new(request.headers.env, params, ost_raw_body).perform()
     if !response[:success]
       Rails.logger.error("error in API Call: #{response}")
       response = Result.error("a_c_ec_1", "UNAUTHORISED", "Not allowed to access the endpoint")

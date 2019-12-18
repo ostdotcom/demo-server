@@ -7,6 +7,8 @@ module OstEvents
       @request_headers = request_headers
       @event_data = Oj.load(params)
       @ost_raw_body = ost_raw_body
+      Rails.logger.info "=====params==1111=#{params}"
+      Rails.logger.info "=====ost_raw_body===2222222=#{ost_raw_body}"
 
       @event_topic = @event_data[:topic]
       @events_processors = {"users/activation_success" => OstEvents::UserActivation,
