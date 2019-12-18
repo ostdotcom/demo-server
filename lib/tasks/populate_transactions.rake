@@ -36,6 +36,7 @@ namespace :one_timers do
           fetch_ledger_params = {user_id: tu[:uuid]}
           if pagination_identifier.present?
             fetch_ledger_params[:pagination_identifier] = pagination_identifier
+            p "-----fetch_ledger_params-----------------#{fetch_ledger_params.inspect}"
           end
 
           response = ost_api_helper.fetch_user_transaction_ledger(fetch_ledger_params)
