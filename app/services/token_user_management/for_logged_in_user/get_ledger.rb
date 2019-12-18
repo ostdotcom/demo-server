@@ -10,7 +10,9 @@ module TokenUserManagement
         @token = params[:token]
         @token_id = @token[:id]
         @token_user = params[:token_user]
+        Rails.logger.info "-----params[:pagination_identifier]--1--------------#{params[:pagination_identifier]}"
         @pagination_identifier = Oj.load(params[:pagination_identifier], {symbol_keys: true}) rescue nil
+        Rails.logger.info "-----@pagination_identifier--2--------------#{@pagination_identifier}"
 
         @token_secure = nil
         @api_endpoint = nil
@@ -100,7 +102,8 @@ module TokenUserManagement
 
         user_transactions_obj = UserTransaction.where(token_user_id: @token_user[:id])
 
-        user_transactions_obj.where(['id < ?', user_transaction_id]) if user_transaction_id
+        Rails.logger.info "-----@user_transaction_id--------------#{user_transaction_id}------#{user_transaction_id.present?}-"
+        user_transactions_obj = user_transactions_obj.where(['id < ?', user_transaction_id]) if user_transaction_id.present?
 
         user_transactions = user_transactions_obj.limit(10).order('id DESC').all
 
