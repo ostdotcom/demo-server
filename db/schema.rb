@@ -81,10 +81,9 @@ ActiveRecord::Schema.define(version: 2019_12_16_121013) do
   create_table "user_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.bigint "token_user_id", null: false
     t.bigint "transaction_id", null: false
-    t.integer "transaction_ts", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["token_user_id", "transaction_ts"], name: "in_1"
+    t.index ["token_user_id"], name: "in_1"
   end
 
 end
