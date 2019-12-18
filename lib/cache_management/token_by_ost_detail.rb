@@ -8,7 +8,7 @@ module CacheManagement
     #
     def fetch_from_db(cache_miss_ids)
       data_to_cache = ::Token.where(ost_token_id: cache_miss_ids, url_id: @options[:url_id]).inject({}) do |data, obj|
-        data[obj.ost_token_id] = obj.formated_cache_data
+        data[obj.ost_token_id] = obj.formatted_cache_data
         data
       end
       Result.success(data_to_cache)

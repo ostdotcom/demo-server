@@ -1,6 +1,6 @@
 class UserTransaction < ApplicationRecord
 
-  def formated_cache_data
+  def formatted_cache_data
     {
       id: id,
       token_user_id: token_user_id,

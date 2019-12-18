@@ -9,7 +9,7 @@ class OstEvent < ApplicationRecord
 
   serialize :event_data, JSON
 
-  def formated_cache_data
+  def formatted_cache_data
     {
       id: id,
       event_id: event_id,

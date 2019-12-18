@@ -3,7 +3,7 @@ class Token < ApplicationRecord
 
   # Format token data for cache
   #
-  def formated_cache_data
+  def formatted_cache_data
     {
       id: id,
       ost_token_id: ost_token_id,

@@ -126,7 +126,7 @@ module TokenUserManagement
       def get_transactions
 
         tx_query_resp = ::Transaction.where(id: @transaction_ids).inject({}) do |data, obj|
-          data[obj.id] = obj.formated_cache_data
+          data[obj.id] = obj.formatted_cache_data
           data
         end
 

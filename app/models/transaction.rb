@@ -8,7 +8,7 @@ class Transaction < ApplicationRecord
 
   serialize :transaction_data, JSON
 
-  def formated_cache_data
+  def formatted_cache_data
     {
       id: id,
       ost_tx_id: ost_tx_id,
