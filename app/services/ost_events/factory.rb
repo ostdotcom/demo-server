@@ -3,9 +3,10 @@ module OstEvents
   class Factory
 
     # Ost event factory constructor.
-    def initialize(request_headers, params)
+    def initialize(request_headers, params, ost_raw_body)
       @request_headers = request_headers
       @event_data = Oj.load(params)
+      @ost_raw_body = ost_raw_body
 
       @event_topic = @event_data[:topic]
       @events_processors = {"users/activation_success" => OstEvents::UserActivation,
@@ -26,7 +27,7 @@ module OstEvents
         @ost_event_obj.save!
 
         # Call event processor.
-        @events_processors[@event_topic].new(@event_data, @request_headers).perform
+        @events_processors[@event_topic].new(@event_data, @request_headers, @ost_raw_body).perform
       else
         Result.error('a_s_oe_f_1',
                             'INVALID_REQUEST',

@@ -69,7 +69,7 @@ class Token < ApplicationRecord
                                        api_secret: token_secure[:api_secret], api_endpoint: api_endpoint})
 
     webhook_params = {
-      stringified_data: data.to_json(:except => [controller, action]),
+      stringified_data: data,
       version: request_headers["HTTP_OST_VERSION"],
       request_timestamp: request_headers["HTTP_OST_TIMESTAMP"],
       signature: request_headers["HTTP_OST_SIGNATURE"],

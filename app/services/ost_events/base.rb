@@ -2,9 +2,10 @@ module OstEvents
 
   class Base
 
-    def initialize(event_data, request_headers)
+    def initialize(event_data, request_headers, ost_raw_body)
       @event_data = event_data
       @request_headers = request_headers
+      @ost_raw_body = ost_raw_body
     end
 
     def mark_ost_event_started

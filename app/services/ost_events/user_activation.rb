@@ -3,7 +3,7 @@ module OstEvents
   class UserActivation < OstEvents::Base
 
     # User activation event constructor.
-    def initialize(event_data, request_headers)
+    def initialize(event_data, request_headers, ost_raw_body)
       super
 
       @ost_user = event_data[:data][:user]
@@ -21,7 +21,7 @@ module OstEvents
       return r unless r[:success]
 
       if @token_user.present?
-        if Token.validate_webhook_signature(@token.id, @event_data, @request_headers)
+        if Token.validate_webhook_signature(@token.id, @ost_raw_body, @request_headers)
           return NotificationManagement::UserActivate.new({token_user: @token_user, token: @token,
                                                            user_data_from_ost: @ost_user}).perform
         end

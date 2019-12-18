@@ -4,7 +4,7 @@ module OstEvents
 
     class Base < ::OstEvents::Base
 
-      def initialize(event_data, request_headers)
+      def initialize(event_data, request_headers, ost_raw_body)
         super
 
         @transaction_data = event_data[:data][:transaction]
