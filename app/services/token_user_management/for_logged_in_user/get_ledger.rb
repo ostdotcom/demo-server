@@ -102,7 +102,7 @@ module TokenUserManagement
 
         user_transactions_obj.where(['id < ?', user_transaction_id]) if user_transaction_id
 
-        user_transactions = user_transactions_obj.limit(10).order('transaction_ts DESC').all
+        user_transactions = user_transactions_obj.limit(10).order('id DESC').all
 
         @transaction_ids, @token_user_ids = [], []
         if user_transactions.present?
