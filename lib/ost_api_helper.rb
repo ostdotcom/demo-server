@@ -87,7 +87,7 @@ class OstApiHelper
   # Verify webhook signature.
   #
   def verify_webhook_signature(params)
-    response = verify_signature.create(params)
+    response = webhooks_service.verify_signature(params)
     handle_ost_response(response)
   end
 
