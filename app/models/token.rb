@@ -69,12 +69,13 @@ class Token < ApplicationRecord
                                        api_secret: token_secure[:api_secret], api_endpoint: api_endpoint})
 
     webhook_params = {
-      stringified_data: data.to_json,
+      stringified_data: data.to_json(:except => [controller, action]),
       version: request_headers["HTTP_OST_VERSION"],
       request_timestamp: request_headers["HTTP_OST_TIMESTAMP"],
       signature: request_headers["HTTP_OST_SIGNATURE"],
       webhook_secret: token_secure[:webhook_secret]
     }
+    Rails.logger.info "===webhook_params==== #{webhook_params}"
     return ost_api_helper.verify_webhook_signature(webhook_params)
   end
 
