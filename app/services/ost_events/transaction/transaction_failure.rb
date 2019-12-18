@@ -48,7 +48,7 @@ module OstEvents
 
       def fetch_token_users
         if @transfers.present? && @transfers.length > 0
-          ost_user_ids = @transfers.map{|x|x["from_user_id"]}
+          ost_user_ids = @transfers.map{|x|x[:from_user_id]}
           @token_users = TokenUser.where(uuid: ost_user_ids).all
         end
       end
