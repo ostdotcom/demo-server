@@ -77,8 +77,7 @@ module OstEvents
         token_user_ids.each do |token_user_id|
           UserTransaction.new({
                                 token_user_id: token_user_id,
-                                transaction_id: @transaction_obj[:id],
-                                transaction_ts: @transaction_data[:updated_timestamp]
+                                transaction_id: @transaction_obj[:id]
                               }).save!
         end
       end
