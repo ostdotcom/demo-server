@@ -143,6 +143,8 @@ module TokenUserManagement
         # Initialize Response data with OST Response
         @api_response_data = tx_response
 
+        Rails.logger.info "======@api_response_data===111111=== #{@api_response_data.to_json}"
+
         Result.success({})
 
       end
@@ -158,6 +160,8 @@ module TokenUserManagement
         token_users_data_by_id.each do |token_user_id, token_user_data|
           @api_response_data[:transaction_users][token_user_data[:uuid]] = ResponseEntity::TokenUser.format(token_user_data)
         end
+
+        Rails.logger.info "======@api_response_data===2222222222=== #{@api_response_data.to_json}"
 
         return Result.success({})
       end

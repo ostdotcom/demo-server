@@ -75,7 +75,6 @@ class Token < ApplicationRecord
       signature: request_headers["HTTP_OST_SIGNATURE"],
       webhook_secret: token_secure[:webhook_secret]
     }
-    Rails.logger.info "===webhook_params==== #{webhook_params}"
     return ost_api_helper.verify_webhook_signature(webhook_params)
   end
 
