@@ -32,6 +32,7 @@ module OstEvents
 
         rescue ActiveRecord::RecordNotUnique => e
           Rails.logger.info "Error in adding Mysql entry. #{e}"
+          Result.success({})
         end
       else
         Result.success({})
