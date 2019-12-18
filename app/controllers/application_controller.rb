@@ -21,6 +21,9 @@ class ApplicationController < ActionController::Base
     unless response[:success]
       Rails.logger.error("error in API Call: #{response}")
     end
+    Rails.logger.info("------------------")
+    Rails.logger.info(Oj.dump(response, mode: :compat))
+    Rails.logger.info("------------------")
     render plain: Oj.dump(response, mode: :compat) and return
   end
 

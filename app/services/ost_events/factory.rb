@@ -18,6 +18,7 @@ module OstEvents
     # Perform action on ost event received.
     def perform
       if @events_processors[@event_topic].present?
+        begin
         # Create entry in ost_events table.
         @ost_event_obj = OstEvent.new({
                                         event_id: @event_data[:id],
@@ -28,6 +29,10 @@ module OstEvents
 
         # Call event processor.
         @events_processors[@event_topic].new(@event_data, @request_headers, @ost_raw_body).perform
+
+        rescue Exception => e
+          Rails.logger.info "Error in adding Mysql entry. #{e}"
+        end
       else
         Result.success({})
       end
