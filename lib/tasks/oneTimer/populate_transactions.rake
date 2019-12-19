@@ -16,7 +16,8 @@ namespace :one_timers do
     }
 
 
-    tx_id = 1000000
+    tx_id = 1000000-1
+    user_tx_id = 1000000-1
 
     Token.all.each {|token_obj|
 
@@ -76,9 +77,11 @@ namespace :one_timers do
                 token_user_id = token_user[:id]
                 next if token_user_id.blank?
                 UserTransaction.create!(
+                  id: user_tx_id,
                   token_user_id: token_user_id,
                   transaction_id: transaction_obj.id
                 )
+                user_tx_id = user_tx_id - 1
               }
             end
 
