@@ -24,6 +24,16 @@ module SetupToken
       r = create_token
       return r unless r[:success]
 
+      r = subscribe_webhooks
+      unless r[:success]
+        Rails.logger.info "Exception in Creating Webhook for economy ost_token_id: #{@ost_token_id}"
+        ApplicationMailer.notify(
+          data: r,
+          body: {name: @name, symbol: @symbol, chain_id: @chain_id, ost_token_id: @ost_token_id },
+          subject: 'Exception in Creating Webhook for economy.'
+        ).deliver
+      end
+
       final_response
     end
 
@@ -60,6 +70,15 @@ module SetupToken
       return r unless r[:success]
 
       Result.success({})
+    end
+
+    def subscribe_webhooks
+      r = set_ost_api_helper
+      return r unless r[:success]
+
+      @ost_api_helper.create_webhooks({
+                                        topics: GlobalConstant::OstEvents.webhook_topics,
+                                        url: GlobalConstant::OstEvents.webhook_subscription_endpoint})
     end
 
 
@@ -112,6 +131,14 @@ module SetupToken
     #
     def generate_salt
       Kms.new.generate_data_key
+    end
+
+    # Set OST API Helper Object
+    #
+    def set_ost_api_helper
+      @ost_api_helper = OstApiHelper.new({api_key: @api_key,
+                                          api_secret: @api_secret, api_endpoint: @api_endpoint})
+      Result.success({})
     end
 
   end

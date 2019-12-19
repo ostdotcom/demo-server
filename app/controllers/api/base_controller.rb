@@ -6,14 +6,14 @@ class Api::BaseController < ApplicationController
 
   private
 
-  # Set authenticate user params
+  # Set authenticate user params.
   #
   def set_authenticate_user_params
     params[:token_user] = nil
     params[:token] = nil
   end
 
-  # Authenticate user
+  # Authenticate user.
   #
   def authenticate_user
     token_user_cache = TokenUser.verify_cookie(cookies[GlobalConstant::Cookie.user_authentication_cookie.to_sym])
@@ -26,7 +26,7 @@ class Api::BaseController < ApplicationController
     end
   end
 
-  # Set token by url params
+  # Set token by url params.
   #
   def set_token_by_url_params
     params[:ost_token_id] = params[:ost_token_id].to_i

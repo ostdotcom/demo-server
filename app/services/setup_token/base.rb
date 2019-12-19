@@ -167,7 +167,7 @@ module SetupToken
     #
     def final_response
       Result.success({result_type: 'token',
-        token: ResponseEntity::Token.format(@token_obj.formated_cache_data, @token_details_from_ost)})
+        token: ResponseEntity::Token.format(@token_obj.formatted_cache_data, @token_details_from_ost)})
     end
 
   end

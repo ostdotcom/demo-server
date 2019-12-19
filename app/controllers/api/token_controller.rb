@@ -1,6 +1,6 @@
 class Api::TokenController < Api::BaseController
 
-  # Get token detail
+  # Get token detail.
   #
   def get
     response = TokenManagement::Get.new(params).perform()

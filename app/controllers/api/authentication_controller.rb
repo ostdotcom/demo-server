@@ -1,7 +1,7 @@
 class Api::AuthenticationController < Api::BaseController
   skip_before_action :authenticate_user
 
-  # Signup
+  # Signup.
   #
   def signup
     response = AuthenticationManagement::Signup.new(params).perform()
@@ -13,7 +13,7 @@ class Api::AuthenticationController < Api::BaseController
     return render_api_response(response)
   end
 
-  # Login
+  # Login.
   #
   def login
     response = AuthenticationManagement::Login.new(params).perform()

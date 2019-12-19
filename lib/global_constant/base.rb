@@ -17,6 +17,10 @@ module GlobalConstant
         @kit_secret_key ||= ENV['KIT_SECRET_KEY']
       end
 
+      def demo_endpoint
+        @demo_endpoint ||= ENV['DEMO_API_ENDPOINT']
+      end
+
     end
 
   end

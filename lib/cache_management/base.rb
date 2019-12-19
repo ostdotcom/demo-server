@@ -1,8 +1,9 @@
 module CacheManagement
 
+  # Base class for cache.
   class Base
 
-    # Initialize
+    # Initialize.
     #
     def initialize(ids, options = {})
       @ids = ids
@@ -10,7 +11,7 @@ module CacheManagement
       @id_to_cache_key_map = {}
     end
 
-    # Clear cache
+    # Clear cache.
     #
     def clear
       set_id_to_cache_key_map
@@ -20,7 +21,7 @@ module CacheManagement
       nil
     end
 
-    # Fetch from cache and for cache misses call fetch_from_db
+    # Fetch from cache. In case of cache misses, call fetch_from_db.
     #
     def fetch
 
@@ -39,7 +40,7 @@ module CacheManagement
 
         data_to_set = fetch_data_rsp[:data] || {}
 
-        # to ensure we do not always query DB for invalid ids being cached, we would set {} in cache against such ids
+        # To ensure we do not always query DB for invalid ids being cached, we would set {} in cache against such ids.
         @ids.each do |id|
           data_to_set[id] = {} if data_from_cache[@id_to_cache_key_map[id]].nil? && data_to_set[id].nil?
         end
@@ -56,7 +57,7 @@ module CacheManagement
 
     private
 
-    # Set Id to Cache Key Map
+    # Set id to cache key map.
     #
     def set_id_to_cache_key_map
       @ids.each do |id|
@@ -64,7 +65,7 @@ module CacheManagement
       end
     end
 
-    # set cache using data provided (data is indexed by id)
+    # Set cache using data provided (data is indexed by id).
     #
     def set_cache(cache_data)
       cache_data.each do |id, data|
@@ -72,22 +73,22 @@ module CacheManagement
       end
     end
 
-    # Fetch from db
+    # Fetch from db.
     #
     def fetch_from_db(cache_miss_ids)
-      fail 'sub class to implement'
+      fail 'Subclass to implement.'
     end
 
-    # Fetch cache key
+    # Fetch cache key.
     #
     def get_cache_key(id)
-      fail 'sub class to implement'
+      fail 'Subclass to implement.'
     end
 
-    # Fetch cache expiry (in seconds)
+    # Fetch cache expiry (in seconds).
     #
     def get_cache_expiry
-      fail 'sub class to implement'
+      fail 'Subclass to implement.'
     end
 
   end
