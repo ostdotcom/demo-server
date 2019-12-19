@@ -10,7 +10,7 @@ module TokenUserManagement
         @token = params[:token]
         @token_id = @token[:id]
         @token_user = params[:token_user]
-        @pagination_identifier = Oj.load(params[:pagination_identifier], {symbol_keys: true}) rescue nil
+        @pagination_identifier = params[:pagination_identifier] || nil
 
         @token_secure = nil
         @api_endpoint = nil
@@ -52,7 +52,7 @@ module TokenUserManagement
       # validate pagination identifier
       #
       def validate_pagination_identifier
-        if @pagination_identifier.blank? || Validator.is_integer?(@pagination_identifier[:last_user_transaction_id])
+        if @pagination_identifier.blank? || Validator.is_integer?(@pagination_identifier)
           Result.success({})
         else
           Result.error('a_s_tum_fliu_gl_1', 'INVALID_REQUEST', 'Invalid pagination_identifier')
@@ -96,11 +96,11 @@ module TokenUserManagement
       # fetch paginated transaction_ids
       #
       def fetch_transaction_ids_list
-        user_transaction_id = @pagination_identifier[:last_user_transaction_id] if @pagination_identifier.present?
+        user_last_transaction_id = @pagination_identifier if @pagination_identifier.present?
 
         user_transactions_obj = UserTransaction.where(token_user_id: @token_user[:id])
 
-        user_transactions_obj = user_transactions_obj.where(['id < ?', user_transaction_id]) if user_transaction_id.present?
+        user_transactions_obj = user_transactions_obj.where(['id < ?', user_last_transaction_id]) if user_last_transaction_id.present?
 
         user_transactions = user_transactions_obj.limit(10).order('id DESC').all
 
@@ -112,7 +112,7 @@ module TokenUserManagement
             last_user_transaction_id = ut.id
             @transaction_ids << ut.transaction_id
           }
-          @pagination_identifier = {last_user_transaction_id: last_user_transaction_id}
+          @pagination_identifier = last_user_transaction_id
 
           @token_user_ids = UserTransaction.where(transaction_id: @transaction_ids).map {|all_ut| all_ut.token_user_id}
         else
