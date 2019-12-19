@@ -16,7 +16,8 @@ module OstEvents
 
         fetch_token_users
 
-        Rails.logger.info "====@token_users===1111== #{@token_users}"
+        Rails.logger.info "====@token_users===1111== #{@token_users.inspect}"
+        Rails.logger.info "====@token_users===222222111122222== #{@token_users.map{|x| x.ost_token_id}.uniq}"
 
         if @token_users.present? and @token_users.map{|x| x.ost_token_id}.uniq.length == 1
           if Token.validate_webhook_signature(@token_users[0].token_id, @ost_raw_body, @request_headers)
@@ -53,8 +54,15 @@ module OstEvents
 
       def fetch_token_users
         if @transfers.present? && @transfers.length > 0
-          ost_user_ids = @transfers.map{|x|x[:from_user_id]}
-          @token_users = TokenUser.where(uuid: ost_user_ids).all
+          uuids_set = Set.new([])
+          @transfers.each do |transfer|
+            uuids_set.add(transfer[:from_user_id]) if transfer[:from_user_id].present?
+            uuids_set.add(transfer[:to_user_id]) if transfer[:to_user_id].present?
+          end
+
+          # Convert to array.
+          @uuids_array = uuids_set.to_a
+          @token_users = TokenUser.where(uuid: @uuids_array).all
         end
       end
 

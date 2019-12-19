@@ -50,8 +50,15 @@ module OstEvents
 
       def fetch_token_users
         if @transfers.present? && @transfers.length > 0
-          ost_user_ids = @transfers.map{|x|x[:from_user_id]}
-          @token_users = TokenUser.where(uuid: ost_user_ids).all
+          uuids_set = Set.new([])
+          @transfers.each do |transfer|
+            uuids_set.add(transfer[:from_user_id]) if transfer[:from_user_id].present?
+            uuids_set.add(transfer[:to_user_id]) if transfer[:to_user_id].present?
+          end
+
+          # Convert to array.
+          @uuids_array = uuids_set.to_a
+          @token_users = TokenUser.where(uuid: @uuids_array).all
         end
       end
 
