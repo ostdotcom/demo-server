@@ -10,9 +10,7 @@ module TokenUserManagement
         @token = params[:token]
         @token_id = @token[:id]
         @token_user = params[:token_user]
-        Rails.logger.info "-----params[:pagination_identifier]--1--------------#{params[:pagination_identifier]}"
         @pagination_identifier = Oj.load(params[:pagination_identifier], {symbol_keys: true}) rescue nil
-        Rails.logger.info "-----@pagination_identifier--2--------------#{@pagination_identifier}"
 
         @token_secure = nil
         @api_endpoint = nil
@@ -102,7 +100,6 @@ module TokenUserManagement
 
         user_transactions_obj = UserTransaction.where(token_user_id: @token_user[:id])
 
-        Rails.logger.info "-----@user_transaction_id--------------#{user_transaction_id}------#{user_transaction_id.present?}-"
         user_transactions_obj = user_transactions_obj.where(['id < ?', user_transaction_id]) if user_transaction_id.present?
 
         user_transactions = user_transactions_obj.limit(10).order('id DESC').all
@@ -147,8 +144,6 @@ module TokenUserManagement
         # Initialize Response data with OST Response
         @api_response_data = tx_response
 
-        Rails.logger.info "======@api_response_data===111111=== #{@api_response_data.to_json}"
-
         Result.success({})
 
       end
@@ -164,8 +159,6 @@ module TokenUserManagement
         token_users_data_by_id.each do |token_user_id, token_user_data|
           @api_response_data[:transaction_users][token_user_data[:uuid]] = ResponseEntity::TokenUser.format(token_user_data)
         end
-
-        Rails.logger.info "======@api_response_data===2222222222=== #{@api_response_data.to_json}"
 
         return Result.success({})
       end

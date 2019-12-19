@@ -37,7 +37,6 @@ namespace :one_timers do
           fetch_ledger_params = {user_id: tu[:uuid]}
           if pagination_identifier.present?
             fetch_ledger_params[:pagination_identifier] = pagination_identifier
-            p "-----fetch_ledger_params-----------------#{fetch_ledger_params.inspect}"
           end
 
           response = ost_api_helper.fetch_user_transaction_ledger(fetch_ledger_params)
@@ -52,12 +51,16 @@ namespace :one_timers do
 
           api_response[api_response[:result_type]].each do |transaction|
             status = tx_status[transaction[:status]] || GlobalConstant::Transactions.pending_status
+            tx_time = Time.at(transaction[:updated_timestamp])
+            created_at = tx_time.strftime("%Y-%m-%d %H:%M:%S")
             begin
               transaction_obj = Transaction.create!(
                 id: tx_id,
                 ost_tx_id: transaction[:id],
                 status: status,
-                transaction_data: transaction
+                transaction_data: transaction,
+                created_at: created_at,
+                updated_at: created_at
               )
               tx_id = tx_id-1
             rescue Exception => e
@@ -79,7 +82,9 @@ namespace :one_timers do
                 UserTransaction.create!(
                   id: user_tx_id,
                   token_user_id: token_user_id,
-                  transaction_id: transaction_obj.id
+                  transaction_id: transaction_obj.id,
+                  created_at: created_at,
+                  updated_at: created_at
                 )
                 user_tx_id = user_tx_id - 1
               }
@@ -88,7 +93,6 @@ namespace :one_timers do
           end
           pagination_identifier = api_response[:meta][:next_page_payload][:pagination_identifier]
           break unless pagination_identifier
-          p "pagination_identifier----11-------------#{pagination_identifier} \n\n\n"
 
         end
 
