@@ -6,6 +6,8 @@ class CreateUserTransactions < ActiveRecord::Migration[5.2]
       t.timestamps
     end
     add_index :user_transactions, [:token_user_id], unique: false, name: 'in_1'
+
+    execute "ALTER TABLE user_transactions AUTO_INCREMENT=1000000;"
   end
 
   def down
