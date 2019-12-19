@@ -6,6 +6,7 @@
 
 # Ignore bundler config.
 /.bundle
+Gemfile.lock
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -16,7 +17,7 @@
 # Ignore idea files
 /.idea
 
-/node_modules
+db/schema.rb
 /yarn-error.log
 
 /public/assets

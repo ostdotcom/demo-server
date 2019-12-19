@@ -10,7 +10,7 @@ module TokenUserManagement
         @token = params[:token]
         @token_id = @token[:id]
         @token_user = params[:token_user]
-        @pagination_identifier = params[:pagination_identifier]
+        @pagination_identifier = params[:pagination_identifier] || nil
 
         @token_secure = nil
         @api_endpoint = nil
@@ -27,7 +27,10 @@ module TokenUserManagement
         r = set_ost_api_helper
         return r unless r[:success]
 
-        r = fetch_ledger_from_ost
+        r = fetch_transaction_ids_list
+        return r unless r[:success]
+
+        r = get_transactions
         return r unless r[:success]
 
         r = fetch_user_data_from_db
@@ -49,7 +52,7 @@ module TokenUserManagement
       # validate pagination identifier
       #
       def validate_pagination_identifier
-        if @pagination_identifier.blank? || Validator.is_alphanumeric_equal?(@pagination_identifier)
+        if @pagination_identifier.blank? || Validator.is_integer?(@pagination_identifier)
           Result.success({})
         else
           Result.error('a_s_tum_fliu_gl_1', 'INVALID_REQUEST', 'Invalid pagination_identifier')
@@ -90,24 +93,59 @@ module TokenUserManagement
         Result.success({})
       end
 
-      # fetch ledger from OST
+      # fetch paginated transaction_ids
       #
-      def fetch_ledger_from_ost
+      def fetch_transaction_ids_list
+        user_last_transaction_id = @pagination_identifier if @pagination_identifier.present?
 
-        fetch_ledger_params = {user_id: @token_user[:uuid]}
-        if @pagination_identifier.present?
-          fetch_ledger_params[:pagination_identifier] = @pagination_identifier
+        user_transactions_obj = UserTransaction.where(token_user_id: @token_user[:id])
+
+        user_transactions_obj = user_transactions_obj.where(['id < ?', user_last_transaction_id]) if user_last_transaction_id.present?
+
+        user_transactions = user_transactions_obj.limit(10).order('id DESC').all
+
+        @transaction_ids, @token_user_ids = [], []
+        if user_transactions.present?
+          last_user_transaction_id= nil
+
+          user_transactions.each {|ut|
+            last_user_transaction_id = ut.id
+            @transaction_ids << ut.transaction_id
+          }
+          @pagination_identifier = last_user_transaction_id
+
+          @token_user_ids = UserTransaction.where(transaction_id: @transaction_ids).map {|all_ut| all_ut.token_user_id}
+        else
+          @pagination_identifier = nil
         end
 
-        response = @ost_api_helper.fetch_user_transaction_ledger(fetch_ledger_params)
-        unless response[:success]
-          return Result.error('a_s_tum_fliu_gl_4', 'SERVICE_UNAVAILABLE', 'Service Temporarily Unavailable')
+        Result.success({})
+      end
+
+      def get_transactions
+
+        tx_query_resp = ::Transaction.where(id: @transaction_ids).inject({}) do |data, obj|
+          data[obj.id] = obj.formatted_cache_data
+          data
+        end
+
+        @transactions = @transaction_ids.map {|tx_id| tx_query_resp[tx_id][:transaction_data ]}
+
+        tx_response = {
+          result_type: 'transactions',
+          transactions: @transactions,
+          meta: {next_page_payload:{}, total_no: @transactions.length}
+        }
+
+        if @pagination_identifier
+          tx_response[:meta][:next_page_payload][:pagination_identifier] = @pagination_identifier
         end
 
         # Initialize Response data with OST Response
-        @api_response_data = response[:data]
+        @api_response_data = tx_response
 
         Result.success({})
+
       end
 
       # fetch user data from DB
@@ -116,39 +154,13 @@ module TokenUserManagement
 
         @api_response_data[:transaction_users] = {}
 
-        uuids_set = Set.new([])
-        # Collect user uuid(s) from @api_response_data
-        @api_response_data[@api_response_data[:result_type]].each do |transaction|
-          transaction[:transfers].each do |transfer|
-            uuids_set.add(transfer[:from_user_id]) if transfer[:from_user_id].present?
-            uuids_set.add(transfer[:to_user_id]) if transfer[:to_user_id].present?
-          end
-        end
+        token_users_data_by_id = CacheManagement::TokenUserById.new(@token_user_ids.uniq).fetch()
 
-        uuids_array = uuids_set.to_a
-        return Result.success({}) unless uuids_array.any?
-
-        token_user_data_by_uuid = CacheManagement::TokenUserByUuid.new(uuids_array).fetch()
-
-        # collect uuids which were not found in TokenUser
-        missing_uuids, uuid_token_user_id_map, token_user_ids = [], {}, []
-        uuids_array.each do |uuid|
-          if token_user_data_by_uuid[uuid].present?
-            uuid_token_user_id_map[uuid] = token_user_data_by_uuid[uuid][:id]
-            token_user_ids.push(token_user_data_by_uuid[uuid][:id])
-          else
-            missing_uuids.push(uuid)
-          end
-        end
-
-        token_users_data_by_id = CacheManagement::TokenUserById.new(token_user_ids).fetch()
-
-        uuid_token_user_id_map.each do |uuid, token_user_id|
-          @api_response_data[:transaction_users][uuid] = ResponseEntity::TokenUser.format(token_users_data_by_id[token_user_id])
+        token_users_data_by_id.each do |token_user_id, token_user_data|
+          @api_response_data[:transaction_users][token_user_data[:uuid]] = ResponseEntity::TokenUser.format(token_user_data)
         end
 
         return Result.success({})
-
       end
 
       # final response

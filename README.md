@@ -1,6 +1,8 @@
 # OST Demo Mappy Server
 
-OST Demo Application Server is a sample implementation of a backend-server of a mobile application that uses the OST Wallet SDK. 
+OST demo application server is a sample implementation of a backend-server for OST wallet built using OST Wallet SDK.
+
+For more details please visit [dev.ost.com](https://dev.ost.com)
 
 ## Setup
 

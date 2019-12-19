@@ -37,7 +37,7 @@ class TokenUser < ApplicationRecord
 
   # Format token data for cache
   #
-  def formated_cache_data
+  def formatted_cache_data
     {
       id: id,
       username: username,

@@ -1,14 +1,17 @@
 module CacheManagement
 
+  # Class to cache secure token details by token id.
   class TokenSecureById < CacheManagement::Base
 
-    # Fetch
+    # Fetch from cache. In case of cache misses, call fetch_from_db.
+    # Over riding the method from base class to store encrypted keys in cache.
     #
     def fetch
       data_cache = super
+
       data_cache.each do |id, token_data|
         next if token_data.blank?
-        # deep dup to not modify the current object
+        # Deep dup to not modify the current object.
         token_data = token_data.deep_dup
         data_cache[id] = token_data
         lc_to_decrypt = LocalCipher.new(GlobalConstant::Base.local_cipher_key)
@@ -28,7 +31,7 @@ module CacheManagement
 
     private
 
-    # Fetch from db
+    # Fetch from db.
     #
     def fetch_from_db(cache_miss_ids)
       data_to_cache = ::Token.where(id: cache_miss_ids).inject({}) do |data, obj|
@@ -38,13 +41,13 @@ module CacheManagement
       Result.success(data_to_cache)
     end
 
-    # Fetch cache key
+    # Fetch cache key.
     #
     def get_cache_key(id)
       "token_secure_by_id_#{id}"
     end
 
-    # Fetch cache expiry (in seconds)
+    # Fetch cache expiry (in seconds).
     #
     def get_cache_expiry
       GlobalConstant::Cache.default_ttl
