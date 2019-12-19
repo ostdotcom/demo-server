@@ -1,5 +1,6 @@
 module OstEvents
 
+  # The factory class returns the processor class for the specific ost event.
   class Factory
 
     # Ost event factory constructor.
@@ -15,7 +16,8 @@ module OstEvents
                             "transactions/failure" => OstEvents::Transaction::TransactionFailure}
     end
 
-    # Perform action on ost event received.
+    # Perform action on ost event received. These events are now being processed directly by the service.
+    # These events can be processed as a background job in order to reduce load on the main app server.
     def perform
       if @events_processors[@event_topic].present?
         begin

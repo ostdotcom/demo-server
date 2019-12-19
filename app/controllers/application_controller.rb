@@ -1,33 +1,30 @@
 class ApplicationController < ActionController::Base
-  # Protect from forgery
+  # Protect from forgery.
   #
   # protect_from_forgery with: :exception
   skip_before_action :verify_authenticity_token
 
-  # Sanitize params
+  # Sanitize params.
   #
   include Sanitizer
   before_action :sanitize_params
 
-  # Set headers
+  # Set headers.
   #
   after_action :set_response_headers
 
   include ApplicationHelper
 
-  # render API response
+  # Render API response.
   #
   def render_api_response(response)
     unless response[:success]
       Rails.logger.error("error in API Call: #{response}")
     end
-    Rails.logger.info("------------------")
-    Rails.logger.info(Oj.dump(response, mode: :compat))
-    Rails.logger.info("------------------")
     render plain: Oj.dump(response, mode: :compat) and return
   end
 
-  # Handle error response
+  # Handle error response.
   #
   def error
     if params[:code].to_i == 404
@@ -42,7 +39,7 @@ class ApplicationController < ActionController::Base
     (render plain: Oj.dump(response, mode: :compat), status: (params[:code] || 500)) and return
   end
 
-  # ELB Health Checker
+  # ELB health checker.
   #
   def health_checker
     render plain: '', :status => 200
@@ -59,13 +56,13 @@ class ApplicationController < ActionController::Base
     response.headers["Content-Type"] = 'application/json; charset=utf-8'
   end
 
-  # Sanitize params
+  # Sanitize params.
   #
   def sanitize_params
     sanitize_params_recursively(params)
   end
 
-  # Set cookie
+  # Set cookie.
   #
   def set_cookie(cookie_name, value, expires)
     cookies[cookie_name.to_sym] = {
@@ -78,7 +75,7 @@ class ApplicationController < ActionController::Base
     }
   end
 
-  # Delete cookie
+  # Delete cookie.
   #
   def delete_cookie(cookie_name)
     cookies.delete(
@@ -89,7 +86,7 @@ class ApplicationController < ActionController::Base
     )
   end
 
-  # Decrypt jwt
+  # Decrypt jwt.
   #
   def decrypt_jwt
     begin
@@ -102,7 +99,7 @@ class ApplicationController < ActionController::Base
 
       params[:decoded_token_data] = HashWithIndifferentAccess.new(decoded_token_data)
     rescue => e
-      # decoding failed
+      # Decoding failed.
       response = Result.error("a_c_ac_5", "UNAUTHORISED", "Not allowed to access the endpoint")
       (render plain: Oj.dump(response, mode: :compat), status: '401') and return
     end

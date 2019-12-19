@@ -2,7 +2,7 @@ class Api::EventController < Api::BaseController
   skip_before_action :authenticate_user
   skip_before_action :set_token_by_url_params
 
-  # Ost event
+  # Handle ost event.
   #
   def ost_event
     response = OstEvents::Factory.new(request.headers.env, params, request.raw_post()).perform()
