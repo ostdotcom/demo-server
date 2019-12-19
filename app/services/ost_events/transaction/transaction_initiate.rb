@@ -58,7 +58,7 @@ module OstEvents
 
           # Convert to array.
           @uuids_array = uuids_set.to_a
-          @token_users = TokenUser.where(uuid: @uuids_array[0]).all
+          @token_users = TokenUser.where(uuid: @uuids_array).all
         end
       end
 
