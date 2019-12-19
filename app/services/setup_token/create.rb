@@ -21,11 +21,18 @@ module SetupToken
       r = validate_params
       return r unless r[:success]
 
-      r = subscribe_webhooks
-      return r unless r[:success]
-
       r = create_token
       return r unless r[:success]
+
+      r = subscribe_webhooks
+      unless r[:success]
+        Rails.logger.info "Exception in Creating Webhook for economy ost_token_id: #{@ost_token_id}"
+        ApplicationMailer.notify(
+          data: r,
+          body: {name: @name, symbol: @symbol, chain_id: @chain_id, ost_token_id: @ost_token_id },
+          subject: 'Exception in Creating Webhook for economy.'
+        ).deliver
+      end
 
       final_response
     end
