@@ -166,7 +166,6 @@ module TokenUserManagement
       # final response
       #
       def final_response
-        Rails.logger.info "=========@api_response_data======#{@api_response_data}"
         Result.success(@api_response_data)
       end
 
