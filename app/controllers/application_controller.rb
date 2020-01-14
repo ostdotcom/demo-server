@@ -70,7 +70,7 @@ class ApplicationController < ActionController::Base
       expires: expires,
       domain: ENV['DEMO_COOKIE_DOMAIN'],
       http_only: true,
-      secure: !Rails.env.development?,
+      secure: false,
       same_site: :strict
     }
   end
