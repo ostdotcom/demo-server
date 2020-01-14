@@ -69,9 +69,9 @@ class ApplicationController < ActionController::Base
       value: value,
       expires: expires,
       domain: ENV['DEMO_COOKIE_DOMAIN'],
-      http_only: true,
-      secure: false,
-      same_site: :strict
+      http_only: true
+      # secure: false,
+      # same_site: :strict
     }
   end
 
