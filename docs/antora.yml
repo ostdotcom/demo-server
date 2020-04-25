@@ -1,0 +1,5 @@
+name: server-sdk-demo
+title: Ost Server SDK Demo (Ruby)
+version: '1.0'
+nav:
+- modules/ROOT/nav.adoc
